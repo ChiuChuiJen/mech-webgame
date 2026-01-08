@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.1';
+const VERSION = '0.1.2';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -24,6 +24,31 @@ const partLabel = (slot)=>({
 
 function safeId(prefix='it'){
   return prefix + '_' + Math.random().toString(36).slice(2,10);
+}
+
+
+function downloadJson(filename, obj){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 300);
+}
+
+function readJsonFile(file){
+  return new Promise((resolve, reject)=>{
+    const fr = new FileReader();
+    fr.onerror = ()=>reject(new Error('讀取檔案失敗'));
+    fr.onload = ()=>{
+      try{ resolve(JSON.parse(fr.result)); }
+      catch(e){ reject(new Error('JSON 格式錯誤')); }
+    };
+    fr.readAsText(file, 'utf-8');
+  });
 }
 
 function escapeHtml(s){
@@ -782,6 +807,111 @@ function setupEquipSlotModal(){
 }
 
 // Modal (reuse existing HTML)
+
+function openSettingsModal(){
+  const now = new Date();
+  const stamp = now.toISOString().slice(0,19).replaceAll(':','-');
+  const body = `
+    <div class="muted" style="margin-bottom:10px;">
+      設定 / 存檔工具（本機瀏覽器 localStorage）。你也可以匯入/匯出 JSON。
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+      <button class="btn btn-primary" id="setSave">存檔（local）</button>
+      <button class="btn btn-primary" id="setLoad">讀檔（local）</button>
+
+      <button class="btn" id="setExportSave">匯出：存檔 JSON</button>
+      <label class="btn" style="text-align:center; cursor:pointer;">
+        匯入：存檔 JSON
+        <input id="setImportSave" type="file" accept="application/json" style="display:none;">
+      </label>
+
+      <button class="btn" id="setExportBase">匯出：Base JSON</button>
+      <label class="btn" style="text-align:center; cursor:pointer;">
+        匯入：Base JSON
+        <input id="setImportBase" type="file" accept="application/json" style="display:none;">
+      </label>
+    </div>
+    <div class="muted" style="margin-top:12px;">
+      Base JSON 只包含機甲基礎屬性（base），不會改你的背包/金幣/進度。
+    </div>
+  `;
+  openModal('設定', body, [{text:'關閉', kind:'', onClick: ()=>{}}]);
+
+  $('#setSave').onclick = save;
+  $('#setLoad').onclick = ()=>{
+    const loaded = load();
+    if(!loaded){ log('沒有找到 local 存檔。'); return; }
+    S = loaded;
+    log('讀取 local 存檔完成。');
+    rerollShop();
+    render();
+  };
+
+  $('#setExportSave').onclick = ()=>{
+    const payload = {version: VERSION, type:'save', savedAt: now.toISOString(), state: S};
+    downloadJson(`mech_save_${VERSION}_${stamp}.json`, payload);
+    log('已匯出存檔 JSON。');
+  };
+
+  $('#setImportSave').onchange = async (ev)=>{
+    const file = ev.target.files && ev.target.files[0];
+    ev.target.value = '';
+    if(!file) return;
+    try{
+      const obj = await readJsonFile(file);
+      const state = obj?.state || obj; // accept raw state too
+      if(!state || typeof state !== 'object') throw new Error('存檔內容不正確');
+      // light validation
+      if(typeof state.lv !== 'number' || !state.inventory || !state.equipped) throw new Error('存檔缺少必要欄位');
+      S = state;
+      log('匯入存檔完成。');
+      rerollShop();
+      render();
+    }catch(e){
+      log('匯入失敗：' + e.message);
+    }
+  };
+
+  $('#setExportBase').onclick = ()=>{
+    const payload = {version: VERSION, type:'base', exportedAt: now.toISOString(), base: S.base};
+    downloadJson(`mech_base_${VERSION}_${stamp}.json`, payload);
+    log('已匯出 Base JSON。');
+  };
+
+  $('#setImportBase').onchange = async (ev)=>{
+    const file = ev.target.files && ev.target.files[0];
+    ev.target.value = '';
+    if(!file) return;
+    try{
+      const obj = await readJsonFile(file);
+      const base = obj?.base || obj;
+      if(!base || typeof base !== 'object') throw new Error('Base 內容不正確');
+      // validate keys
+      const keys = ['hpMax','enMax','atk','def','crit','ls'];
+      for(const k of keys){
+        if(typeof base[k] !== 'number' || !isFinite(base[k])) throw new Error('Base 欄位缺失或不是數字：' + k);
+      }
+      // apply with clamps
+      S.base = {
+        hpMax: clamp(Math.floor(base.hpMax), 20, 9999),
+        enMax: clamp(Math.floor(base.enMax), 10, 9999),
+        atk:   clamp(Math.floor(base.atk),   1, 9999),
+        def:   clamp(Math.floor(base.def),   0, 9999),
+        crit:  clamp(Math.floor(base.crit),  0, 75),
+        ls:    clamp(Math.floor(base.ls),    0, 40),
+      };
+      const st = stats();
+      S.hp = clamp(S.hp, 0, st.hpMax);
+      S.en = clamp(S.en, 0, st.enMax);
+      log('匯入 Base 完成（已套用基礎屬性）。');
+      render();
+    }catch(e){
+      log('匯入失敗：' + e.message);
+    }
+  };
+}
+
+
 function openModal(title, bodyHtml, actions){
   const dlg = $('#modal');
   $('#modalTitle').textContent = title;
@@ -825,6 +955,9 @@ async function boot(){
 
   $('#btnRerollShop').onclick = rerollShop;
   $('#btnSave').onclick = save;
+  const btnSet = $('#btnSettings');
+  if(btnSet) btnSet.onclick = openSettingsModal;
+
   $('#btnReset').onclick = ()=>openModal('確認重置','這會清除存檔並回到初始狀態。',[
     {text:'取消', kind:'', onClick: ()=>{}},
     {text:'確定重置', kind:'btn-danger', onClick: ()=>reset()}
