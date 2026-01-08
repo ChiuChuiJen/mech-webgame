@@ -1,0 +1,87 @@
+[
+  {
+    "id": "m_001",
+    "name": "廢土掠奪者",
+    "tier": "普通",
+    "lv": 1,
+    "hp": 24,
+    "atk": 5,
+    "def": 1,
+    "xp": 10,
+    "gold": 10,
+    "drops": {
+      "weapon": 0.12,
+      "armor": 0.1,
+      "core": 0.08,
+      "consumable": 0.18
+    }
+  },
+  {
+    "id": "m_002",
+    "name": "鏽蝕機蜂群",
+    "tier": "普通",
+    "lv": 1,
+    "hp": 20,
+    "atk": 6,
+    "def": 0,
+    "xp": 10,
+    "gold": 9,
+    "drops": {
+      "weapon": 0.1,
+      "armor": 0.08,
+      "core": 0.1,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_003",
+    "name": "殘骸守衛",
+    "tier": "菁英",
+    "lv": 2,
+    "hp": 40,
+    "atk": 8,
+    "def": 3,
+    "xp": 22,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.2,
+      "armor": 0.18,
+      "core": 0.16,
+      "consumable": 0.25
+    }
+  },
+  {
+    "id": "m_004",
+    "name": "荒原獵犬王",
+    "tier": "MiniBoss",
+    "lv": 3,
+    "hp": 62,
+    "atk": 11,
+    "def": 4,
+    "xp": 42,
+    "gold": 45,
+    "drops": {
+      "weapon": 0.3,
+      "armor": 0.28,
+      "core": 0.24,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_005",
+    "name": "黑砂巨像",
+    "tier": "Boss",
+    "lv": 4,
+    "hp": 92,
+    "atk": 14,
+    "def": 6,
+    "xp": 80,
+    "gold": 80,
+    "drops": {
+      "weapon": 0.4,
+      "armor": 0.4,
+      "core": 0.32,
+      "consumable": 0.45
+    }
+  }
+]

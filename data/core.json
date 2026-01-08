@@ -1,0 +1,50 @@
+[
+  {
+    "id": "c_001",
+    "name": "舊式動力核心",
+    "rarity": "普通",
+    "atk": 1,
+    "def": 1,
+    "hp": 6,
+    "en": 6,
+    "passive": "穩定：能量回復+1/回合",
+    "price": 30,
+    "set": "S_SCRAP"
+  },
+  {
+    "id": "c_002",
+    "name": "巡邏AI副核",
+    "rarity": "普通",
+    "atk": 2,
+    "def": 0,
+    "hp": 4,
+    "en": 8,
+    "passive": "演算：技能耗能-1",
+    "price": 40,
+    "set": "S_PATROL"
+  },
+  {
+    "id": "c_003",
+    "name": "先鋒超導核",
+    "rarity": "菁英",
+    "atk": 3,
+    "def": 2,
+    "hp": 8,
+    "en": 12,
+    "passive": "超導：技能傷害+10%",
+    "price": 110,
+    "set": "S_VANGUARD"
+  },
+  {
+    "id": "c_004",
+    "name": "王座級相位核心",
+    "rarity": "傳說",
+    "atk": 4,
+    "def": 3,
+    "hp": 14,
+    "en": 16,
+    "passive": "相位：每回合有10%機率閃避",
+    "price": 260,
+    "set": "S_VANGUARD"
+  }
+]

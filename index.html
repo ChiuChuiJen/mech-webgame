@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>機甲：廢土升等掉寶 (V0.1.0)</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=0.1.0" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🤖</div>
+      <div class="titles">
+        <div class="name">機甲：廢土升等掉寶</div>
+        <div class="ver">V0.1.0 · GitHub Pages 可直接跑</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="btnSave" class="btn">存檔</button>
+      <button id="btnReset" class="btn btn-danger">重置</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card">
+      <div class="card-hd">
+        <h2>駕駛員 / 機甲狀態</h2>
+        <div class="pill" id="pillArea">區域：新手區</div>
+      </div>
+
+      <div class="grid2">
+        <div class="statbox">
+          <div class="statrow"><span>等級</span><b id="lv">1</b></div>
+          <div class="statrow"><span>經驗</span><b id="xp">0</b></div>
+          <div class="bar"><div id="xpBar" class="fill"></div></div>
+
+          <div class="statrow"><span>生命</span><b id="hp">0</b></div>
+          <div class="bar"><div id="hpBar" class="fill"></div></div>
+
+          <div class="statrow"><span>能量</span><b id="en">0</b></div>
+          <div class="bar"><div id="enBar" class="fill"></div></div>
+
+          <div class="statrow"><span>金幣</span><b id="gold">0</b></div>
+          <div class="hint">提示：探索 → 戰鬥 → 掉寶/升等 → 配裝</div>
+        </div>
+
+        <div class="equipbox">
+          <div class="subhd">
+            <h3>裝備</h3>
+            <div class="small" id="setProgress">套裝：—</div>
+          </div>
+
+          <div class="equipgrid">
+            <div class="slot">
+              <div class="lbl">右手武器</div>
+              <button class="slotbtn" id="eqWeaponR">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">左手武器</div>
+              <button class="slotbtn" id="eqWeaponL">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">機甲裝甲</div>
+              <button class="slotbtn" id="eqArmor">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">核心模組</div>
+              <button class="slotbtn" id="eqCore">—</button>
+            </div>
+          </div>
+
+          <div class="totals">
+            <div class="kpi"><span>攻擊</span><b id="atk">0</b></div>
+            <div class="kpi"><span>防禦</span><b id="def">0</b></div>
+            <div class="kpi"><span>暴擊%</span><b id="crit">0</b></div>
+            <div class="kpi"><span>吸血%</span><b id="ls">0</b></div>
+          </div>
+          <div class="small muted" id="passives">被動：—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-hd">
+        <h2>行動</h2>
+        <div class="tabs">
+          <button class="tab active" data-tab="explore">探索</button>
+          <button class="tab" data-tab="battle">戰鬥</button>
+          <button class="tab" data-tab="inventory">背包</button>
+          <button class="tab" data-tab="shop">雜貨店</button>
+          <button class="tab" data-tab="log">歷程</button>
+        </div>
+      </div>
+
+      <div class="tabpanes">
+        <div class="pane active" id="pane-explore">
+          <div class="row">
+            <button id="btnExplore" class="btn btn-primary">開始探索</button>
+            <button id="btnRest" class="btn">休整 (+HP/EN)</button>
+            <div class="small muted">探索會觸發戰鬥；休整最多回到上限。</div>
+          </div>
+
+          <div class="battlebox">
+            <div class="enemy">
+              <div class="enemyname" id="enemyName">—</div>
+              <div class="statrow"><span>生命</span><b id="enemyHp">—</b></div>
+              <div class="bar"><div id="enemyHpBar" class="fill"></div></div>
+              <div class="small muted" id="enemyInfo">—</div>
+            </div>
+            <div class="controls">
+              <button id="btnAttack" class="btn btn-primary" disabled>普通攻擊</button>
+              <button id="btnSkill" class="btn" disabled>技能 (耗能)</button>
+              <button id="btnFlee" class="btn btn-danger" disabled>撤退</button>
+              <div class="small muted" id="battleHint">先探索以遇敵。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane" id="pane-battle">
+          <div class="small muted">戰鬥也會在「探索」分頁顯示。你可以在那邊直接操作。</div>
+        </div>
+
+        <div class="pane" id="pane-inventory">
+          <div class="row">
+            <button id="btnSort" class="btn">排序</button>
+            <button id="btnSalvageJunk" class="btn btn-danger">分解普通 (換金幣)</button>
+            <div class="small muted">點物品可：裝備 / 解除 / 販售 / 分解。</div>
+          </div>
+          <div id="invList" class="list"></div>
+        </div>
+
+        <div class="pane" id="pane-shop">
+          <div class="row">
+            <button id="btnRerollShop" class="btn">刷新</button>
+            <div class="small muted">雜貨店會賣：基礎武器/防具/補給。</div>
+          </div>
+          <div id="shopList" class="list"></div>
+        </div>
+
+        <div class="pane" id="pane-log">
+          <div class="row">
+            <button id="btnClearLog" class="btn btn-danger">清空</button>
+            <div class="small muted">只保留最新 10 筆，超過以捲軸瀏覽。</div>
+          </div>
+          <div id="logBox" class="log"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-hd">
+        <h2>說明</h2>
+      </div>
+      <ul class="bullets">
+        <li>這是一個純前端小型 RPG（單檔可跑），適合直接丟到 GitHub Pages。</li>
+        <li>支援：升等、掉寶、雙持（右手/左手不同被動）、套裝 2/4 效果、雜貨店、存檔（localStorage）。</li>
+        <li>你可以直接改 <code>data/*.json</code> 來調平衡，不用改程式。</li>
+      </ul>
+    </section>
+  </main>
+
+  <dialog id="modal" class="modal">
+    <div class="modal-inner">
+      <div class="modal-hd">
+        <h3 id="modalTitle">—</h3>
+        <button id="modalClose" class="iconbtn" aria-label="close">✕</button>
+      </div>
+      <div id="modalBody" class="modal-bd"></div>
+      <div class="modal-ft" id="modalActions"></div>
+    </div>
+  </dialog>
+
+  <script src="main.js?v=0.1.0"></script>
+</body>
+</html>

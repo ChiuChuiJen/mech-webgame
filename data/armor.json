@@ -1,0 +1,57 @@
+[
+  {
+    "id": "a_001",
+    "name": "廢鐵外骨骼",
+    "rarity": "普通",
+    "def": 3,
+    "hp": 10,
+    "en": 0,
+    "passive": "耐久：受到傷害-1",
+    "price": 25,
+    "set": "S_SCRAP"
+  },
+  {
+    "id": "a_002",
+    "name": "巡邏裝甲板",
+    "rarity": "普通",
+    "def": 4,
+    "hp": 8,
+    "en": 2,
+    "passive": "巡防：撤退成功率+10%",
+    "price": 35,
+    "set": "S_PATROL"
+  },
+  {
+    "id": "a_003",
+    "name": "廢土合金胸甲",
+    "rarity": "菁英",
+    "def": 6,
+    "hp": 14,
+    "en": 3,
+    "passive": "合金：防禦+2",
+    "price": 85,
+    "set": "S_SCRAP"
+  },
+  {
+    "id": "a_004",
+    "name": "先鋒護盾模組",
+    "rarity": "菁英",
+    "def": 7,
+    "hp": 10,
+    "en": 6,
+    "passive": "護盾：每場戰鬥首次受擊減半",
+    "price": 95,
+    "set": "S_VANGUARD"
+  },
+  {
+    "id": "a_005",
+    "name": "王座級反應裝甲",
+    "rarity": "傳說",
+    "def": 10,
+    "hp": 22,
+    "en": 6,
+    "passive": "反應：受到爆擊機率-5%",
+    "price": 240,
+    "set": "S_VANGUARD"
+  }
+]

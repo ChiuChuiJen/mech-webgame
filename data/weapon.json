@@ -1,0 +1,68 @@
+[
+  {
+    "id": "w_001",
+    "name": "廢土短刃",
+    "rarity": "普通",
+    "type": "blade",
+    "atk": 4,
+    "crit": 2,
+    "ls": 0,
+    "passive": "斬擊：暴擊+2%",
+    "price": 25
+  },
+  {
+    "id": "w_002",
+    "name": "工業釘槍",
+    "rarity": "普通",
+    "type": "gun",
+    "atk": 5,
+    "crit": 1,
+    "ls": 0,
+    "passive": "穿刺：對護甲較高目標傷害+5%",
+    "price": 30
+  },
+  {
+    "id": "w_003",
+    "name": "舊式電弧棒",
+    "rarity": "菁英",
+    "type": "arc",
+    "atk": 7,
+    "crit": 2,
+    "ls": 1,
+    "passive": "電弧：技能傷害+8%",
+    "price": 70
+  },
+  {
+    "id": "w_004",
+    "name": "磁軌步槍",
+    "rarity": "菁英",
+    "type": "rail",
+    "atk": 8,
+    "crit": 4,
+    "ls": 0,
+    "passive": "磁軌：暴擊傷害+10%",
+    "price": 90
+  },
+  {
+    "id": "w_005",
+    "name": "核心等離子刃",
+    "rarity": "傳說",
+    "type": "plasma",
+    "atk": 12,
+    "crit": 5,
+    "ls": 2,
+    "passive": "過載：每回合第一次命中額外+6 傷害",
+    "price": 220
+  },
+  {
+    "id": "w_006",
+    "name": "雙相粒子砲",
+    "rarity": "傳說",
+    "type": "particle",
+    "atk": 13,
+    "crit": 3,
+    "ls": 1,
+    "passive": "雙相：能量上限+10",
+    "price": 240
+  }
+]

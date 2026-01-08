@@ -1,0 +1,43 @@
+[
+  {
+    "id": "p_001",
+    "name": "微型修復膠囊",
+    "rarity": "普通",
+    "kind": "heal",
+    "hp": 20,
+    "en": 0,
+    "price": 15,
+    "desc": "回復 20 HP"
+  },
+  {
+    "id": "p_002",
+    "name": "能量電池",
+    "rarity": "普通",
+    "kind": "energy",
+    "hp": 0,
+    "en": 15,
+    "price": 18,
+    "desc": "回復 15 EN"
+  },
+  {
+    "id": "p_003",
+    "name": "戰場止血凝膠",
+    "rarity": "菁英",
+    "kind": "heal",
+    "hp": 45,
+    "en": 0,
+    "price": 45,
+    "desc": "回復 45 HP"
+  },
+  {
+    "id": "p_004",
+    "name": "超頻冷卻劑",
+    "rarity": "菁英",
+    "kind": "buff",
+    "buff": "atk",
+    "value": 3,
+    "turns": 3,
+    "price": 55,
+    "desc": "3 回合 攻擊+3"
+  }
+]
