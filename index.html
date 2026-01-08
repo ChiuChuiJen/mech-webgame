@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>機甲：廢土升等掉寶 (V0.1.0)</title>
+  <title>機甲：廢土升等掉寶 (V0.1.1)</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.0" />
+  <link rel="stylesheet" href="styles.css?v=0.1.1" />
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +13,7 @@
       <div class="logo">🤖</div>
       <div class="titles">
         <div class="name">機甲：廢土升等掉寶</div>
-        <div class="ver">V0.1.0 · GitHub Pages 可直接跑</div>
+        <div class="ver">V0.1.1 · GitHub Pages 可直接跑</div>
       </div>
     </div>
     <div class="top-actions">
@@ -61,8 +61,24 @@
               <button class="slotbtn" id="eqWeaponL">—</button>
             </div>
             <div class="slot">
-              <div class="lbl">機甲裝甲</div>
-              <button class="slotbtn" id="eqArmor">—</button>
+              <div class="lbl">頭部模組</div>
+              <button class="slotbtn" id="eqHead">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">軀幹裝甲</div>
+              <button class="slotbtn" id="eqBody">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">手臂模組</div>
+              <button class="slotbtn" id="eqArms">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">腿部模組</div>
+              <button class="slotbtn" id="eqLegs">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">推進器</div>
+              <button class="slotbtn" id="eqBooster">—</button>
             </div>
             <div class="slot">
               <div class="lbl">核心模組</div>
@@ -98,6 +114,10 @@
           <div class="row">
             <button id="btnExplore" class="btn btn-primary">開始探索</button>
             <button id="btnRest" class="btn">休整 (+HP/EN)</button>
+            <div class="pill" id="pillFloor">探索：1F</div>
+            <button id="btnPrevFloor" class="btn">上一層</button>
+            <button id="btnNextFloor" class="btn">下一層</button>
+
             <div class="small muted">探索會觸發戰鬥；休整最多回到上限。</div>
           </div>
 
@@ -171,6 +191,6 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=0.1.0"></script>
+  <script src="main.js?v=0.1.1"></script>
 </body>
 </html>

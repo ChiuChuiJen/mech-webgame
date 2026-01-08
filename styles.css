@@ -1,4 +1,4 @@
-/* V0.1.0 */
+/* V0.1.1 */
 :root{
   --bg:#0b0f14;
   --card:#101823;
@@ -71,7 +71,7 @@ h3{margin:0; font-size:14px}
 .statrow span{color:var(--muted); font-size:12px}
 .statrow b{font-family:var(--mono)}
 .bar{height:10px; background:#0a111a; border:1px solid #172435; border-radius:999px; overflow:hidden}
-.fill{height:100%; width:0%}
+.fill{height:100%; width:0%; background: linear-gradient(90deg, rgba(91,214,255,.95), rgba(125,255,158,.85));}
 .hint{margin-top:10px; font-size:12px; color:var(--muted)}
 
 .subhd{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px}

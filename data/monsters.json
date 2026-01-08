@@ -1,86 +1,2721 @@
 [
   {
-    "id": "m_001",
-    "name": "廢土掠奪者",
-    "tier": "普通",
+    "id": "m_0001",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 掠奪者",
     "lv": 1,
-    "hp": 24,
-    "atk": 5,
+    "hp": 28,
+    "atk": 7,
     "def": 1,
-    "xp": 10,
-    "gold": 10,
+    "xp": 14,
+    "gold": 13,
     "drops": {
-      "weapon": 0.12,
-      "armor": 0.1,
-      "core": 0.08,
-      "consumable": 0.18
-    }
-  },
-  {
-    "id": "m_002",
-    "name": "鏽蝕機蜂群",
-    "tier": "普通",
-    "lv": 1,
-    "hp": 20,
-    "atk": 6,
-    "def": 0,
-    "xp": 10,
-    "gold": 9,
-    "drops": {
-      "weapon": 0.1,
-      "armor": 0.08,
-      "core": 0.1,
+      "weapon": 0.13,
+      "equipment": 0.17,
       "consumable": 0.2
     }
   },
   {
-    "id": "m_003",
-    "name": "殘骸守衛",
-    "tier": "菁英",
-    "lv": 2,
-    "hp": 40,
+    "id": "m_0002",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 鏽蜂",
+    "lv": 1,
+    "hp": 30,
     "atk": 8,
-    "def": 3,
-    "xp": 22,
-    "gold": 22,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
     "drops": {
-      "weapon": 0.2,
-      "armor": 0.18,
-      "core": 0.16,
-      "consumable": 0.25
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
     }
   },
   {
-    "id": "m_004",
-    "name": "荒原獵犬王",
-    "tier": "MiniBoss",
-    "lv": 3,
-    "hp": 62,
-    "atk": 11,
-    "def": 4,
-    "xp": 42,
-    "gold": 45,
+    "id": "m_0003",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 廢犬",
+    "lv": 1,
+    "hp": 32,
+    "atk": 9,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
     "drops": {
-      "weapon": 0.3,
-      "armor": 0.28,
-      "core": 0.24,
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0004",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 碎片炮手",
+    "lv": 1,
+    "hp": 34,
+    "atk": 7,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0005",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 沙塵斥候",
+    "lv": 1,
+    "hp": 36,
+    "atk": 8,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0006",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 焦土工程機",
+    "lv": 1,
+    "hp": 38,
+    "atk": 9,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0007",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 污染行者",
+    "lv": 1,
+    "hp": 40,
+    "atk": 7,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0008",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 鐵皮蟲",
+    "lv": 1,
+    "hp": 42,
+    "atk": 8,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0009",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 斷線無人機",
+    "lv": 1,
+    "hp": 44,
+    "atk": 9,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0010",
+    "floor": 1,
+    "role": "普通",
+    "name": "1F 鐵渣狂徒",
+    "lv": 1,
+    "hp": 46,
+    "atk": 7,
+    "def": 1,
+    "xp": 14,
+    "gold": 13,
+    "drops": {
+      "weapon": 0.13,
+      "equipment": 0.17,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0011",
+    "floor": 1,
+    "role": "菁英",
+    "name": "1F 殘骸守衛",
+    "lv": 1,
+    "hp": 55,
+    "atk": 11,
+    "def": 3,
+    "xp": 31,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.21000000000000002,
+      "equipment": 0.252,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0012",
+    "floor": 1,
+    "role": "菁英",
+    "name": "1F 灰塵重裝",
+    "lv": 1,
+    "hp": 61,
+    "atk": 12,
+    "def": 3,
+    "xp": 31,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.21000000000000002,
+      "equipment": 0.252,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0013",
+    "floor": 1,
+    "role": "菁英",
+    "name": "1F 磁暴獵兵",
+    "lv": 1,
+    "hp": 67,
+    "atk": 13,
+    "def": 3,
+    "xp": 31,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.21000000000000002,
+      "equipment": 0.252,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0014",
+    "floor": 1,
+    "role": "菁英",
+    "name": "1F 脈衝執行者",
+    "lv": 1,
+    "hp": 73,
+    "atk": 14,
+    "def": 3,
+    "xp": 31,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.21000000000000002,
+      "equipment": 0.252,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0015",
+    "floor": 1,
+    "role": "MiniBoss",
+    "name": "1F 荒原獵犬王",
+    "lv": 2,
+    "hp": 96,
+    "atk": 16,
+    "def": 5,
+    "xp": 67,
+    "gold": 65,
+    "drops": {
+      "weapon": 0.29200000000000004,
+      "equipment": 0.334,
       "consumable": 0.35
     }
   },
   {
-    "id": "m_005",
-    "name": "黑砂巨像",
-    "tier": "Boss",
-    "lv": 4,
-    "hp": 92,
+    "id": "m_0016",
+    "floor": 1,
+    "role": "Boss",
+    "name": "1F 黑砂巨像",
+    "lv": 3,
+    "hp": 156,
+    "atk": 21,
+    "def": 7,
+    "xp": 122,
+    "gold": 108,
+    "drops": {
+      "weapon": 0.41200000000000003,
+      "equipment": 0.454,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0017",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 掠奪者",
+    "lv": 2,
+    "hp": 34,
+    "atk": 9,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0018",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 鏽蜂",
+    "lv": 2,
+    "hp": 36,
+    "atk": 10,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0019",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 廢犬",
+    "lv": 2,
+    "hp": 38,
+    "atk": 11,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0020",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 碎片炮手",
+    "lv": 2,
+    "hp": 40,
+    "atk": 9,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0021",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 沙塵斥候",
+    "lv": 2,
+    "hp": 42,
+    "atk": 10,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0022",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 焦土工程機",
+    "lv": 2,
+    "hp": 44,
+    "atk": 11,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0023",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 污染行者",
+    "lv": 2,
+    "hp": 46,
+    "atk": 9,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0024",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 鐵皮蟲",
+    "lv": 2,
+    "hp": 48,
+    "atk": 10,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0025",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 斷線無人機",
+    "lv": 2,
+    "hp": 50,
+    "atk": 11,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0026",
+    "floor": 2,
+    "role": "普通",
+    "name": "2F 鐵渣狂徒",
+    "lv": 2,
+    "hp": 52,
+    "atk": 9,
+    "def": 2,
+    "xp": 18,
+    "gold": 16,
+    "drops": {
+      "weapon": 0.13999999999999999,
+      "equipment": 0.18,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0027",
+    "floor": 2,
+    "role": "菁英",
+    "name": "2F 殘骸守衛",
+    "lv": 2,
+    "hp": 65,
     "atk": 14,
+    "def": 4,
+    "xp": 38,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.264,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0028",
+    "floor": 2,
+    "role": "菁英",
+    "name": "2F 灰塵重裝",
+    "lv": 2,
+    "hp": 71,
+    "atk": 15,
+    "def": 4,
+    "xp": 38,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.264,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0029",
+    "floor": 2,
+    "role": "菁英",
+    "name": "2F 磁暴獵兵",
+    "lv": 2,
+    "hp": 77,
+    "atk": 16,
+    "def": 4,
+    "xp": 38,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.264,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0030",
+    "floor": 2,
+    "role": "菁英",
+    "name": "2F 脈衝執行者",
+    "lv": 2,
+    "hp": 83,
+    "atk": 17,
+    "def": 4,
+    "xp": 38,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.264,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0031",
+    "floor": 2,
+    "role": "MiniBoss",
+    "name": "2F 鋼鐵蠍后",
+    "lv": 3,
+    "hp": 112,
+    "atk": 20,
     "def": 6,
+    "xp": 79,
+    "gold": 75,
+    "drops": {
+      "weapon": 0.30400000000000005,
+      "equipment": 0.34800000000000003,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0032",
+    "floor": 2,
+    "role": "Boss",
+    "name": "2F 墜落方舟核心",
+    "lv": 4,
+    "hp": 182,
+    "atk": 26,
+    "def": 8,
+    "xp": 144,
+    "gold": 126,
+    "drops": {
+      "weapon": 0.42400000000000004,
+      "equipment": 0.468,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0033",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 掠奪者",
+    "lv": 3,
+    "hp": 40,
+    "atk": 11,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0034",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 鏽蜂",
+    "lv": 3,
+    "hp": 42,
+    "atk": 12,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0035",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 廢犬",
+    "lv": 3,
+    "hp": 44,
+    "atk": 13,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0036",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 碎片炮手",
+    "lv": 3,
+    "hp": 46,
+    "atk": 11,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0037",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 沙塵斥候",
+    "lv": 3,
+    "hp": 48,
+    "atk": 12,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0038",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 焦土工程機",
+    "lv": 3,
+    "hp": 50,
+    "atk": 13,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0039",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 污染行者",
+    "lv": 3,
+    "hp": 52,
+    "atk": 11,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0040",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 鐵皮蟲",
+    "lv": 3,
+    "hp": 54,
+    "atk": 12,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0041",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 斷線無人機",
+    "lv": 3,
+    "hp": 56,
+    "atk": 13,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0042",
+    "floor": 3,
+    "role": "普通",
+    "name": "3F 鐵渣狂徒",
+    "lv": 3,
+    "hp": 58,
+    "atk": 11,
+    "def": 2,
+    "xp": 22,
+    "gold": 19,
+    "drops": {
+      "weapon": 0.15,
+      "equipment": 0.19,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0043",
+    "floor": 3,
+    "role": "菁英",
+    "name": "3F 殘骸守衛",
+    "lv": 3,
+    "hp": 75,
+    "atk": 17,
+    "def": 4,
+    "xp": 45,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.23,
+      "equipment": 0.276,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0044",
+    "floor": 3,
+    "role": "菁英",
+    "name": "3F 灰塵重裝",
+    "lv": 3,
+    "hp": 81,
+    "atk": 18,
+    "def": 4,
+    "xp": 45,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.23,
+      "equipment": 0.276,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0045",
+    "floor": 3,
+    "role": "菁英",
+    "name": "3F 磁暴獵兵",
+    "lv": 3,
+    "hp": 87,
+    "atk": 19,
+    "def": 4,
+    "xp": 45,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.23,
+      "equipment": 0.276,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0046",
+    "floor": 3,
+    "role": "菁英",
+    "name": "3F 脈衝執行者",
+    "lv": 3,
+    "hp": 93,
+    "atk": 20,
+    "def": 4,
+    "xp": 45,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.23,
+      "equipment": 0.276,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0047",
+    "floor": 3,
+    "role": "MiniBoss",
+    "name": "3F 裂盾巨兵",
+    "lv": 4,
+    "hp": 128,
+    "atk": 24,
+    "def": 6,
+    "xp": 91,
+    "gold": 85,
+    "drops": {
+      "weapon": 0.31600000000000006,
+      "equipment": 0.362,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0048",
+    "floor": 3,
+    "role": "Boss",
+    "name": "3F 深井鑄造主機",
+    "lv": 5,
+    "hp": 208,
+    "atk": 31,
+    "def": 8,
+    "xp": 166,
+    "gold": 144,
+    "drops": {
+      "weapon": 0.43600000000000005,
+      "equipment": 0.482,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0049",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 掠奪者",
+    "lv": 4,
+    "hp": 46,
+    "atk": 13,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0050",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 鏽蜂",
+    "lv": 4,
+    "hp": 48,
+    "atk": 14,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0051",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 廢犬",
+    "lv": 4,
+    "hp": 50,
+    "atk": 15,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0052",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 碎片炮手",
+    "lv": 4,
+    "hp": 52,
+    "atk": 13,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0053",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 沙塵斥候",
+    "lv": 4,
+    "hp": 54,
+    "atk": 14,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0054",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 焦土工程機",
+    "lv": 4,
+    "hp": 56,
+    "atk": 15,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0055",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 污染行者",
+    "lv": 4,
+    "hp": 58,
+    "atk": 13,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0056",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 鐵皮蟲",
+    "lv": 4,
+    "hp": 60,
+    "atk": 14,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0057",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 斷線無人機",
+    "lv": 4,
+    "hp": 62,
+    "atk": 15,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0058",
+    "floor": 4,
+    "role": "普通",
+    "name": "4F 鐵渣狂徒",
+    "lv": 4,
+    "hp": 64,
+    "atk": 13,
+    "def": 3,
+    "xp": 26,
+    "gold": 22,
+    "drops": {
+      "weapon": 0.16,
+      "equipment": 0.2,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0059",
+    "floor": 4,
+    "role": "菁英",
+    "name": "4F 殘骸守衛",
+    "lv": 4,
+    "hp": 85,
+    "atk": 20,
+    "def": 5,
+    "xp": 52,
+    "gold": 46,
+    "drops": {
+      "weapon": 0.24000000000000002,
+      "equipment": 0.288,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0060",
+    "floor": 4,
+    "role": "菁英",
+    "name": "4F 灰塵重裝",
+    "lv": 4,
+    "hp": 91,
+    "atk": 21,
+    "def": 5,
+    "xp": 52,
+    "gold": 46,
+    "drops": {
+      "weapon": 0.24000000000000002,
+      "equipment": 0.288,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0061",
+    "floor": 4,
+    "role": "菁英",
+    "name": "4F 磁暴獵兵",
+    "lv": 4,
+    "hp": 97,
+    "atk": 22,
+    "def": 5,
+    "xp": 52,
+    "gold": 46,
+    "drops": {
+      "weapon": 0.24000000000000002,
+      "equipment": 0.288,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0062",
+    "floor": 4,
+    "role": "菁英",
+    "name": "4F 脈衝執行者",
+    "lv": 4,
+    "hp": 103,
+    "atk": 23,
+    "def": 5,
+    "xp": 52,
+    "gold": 46,
+    "drops": {
+      "weapon": 0.24000000000000002,
+      "equipment": 0.288,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0063",
+    "floor": 4,
+    "role": "MiniBoss",
+    "name": "4F 荒塔守門人",
+    "lv": 5,
+    "hp": 144,
+    "atk": 28,
+    "def": 7,
+    "xp": 103,
+    "gold": 95,
+    "drops": {
+      "weapon": 0.328,
+      "equipment": 0.376,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0064",
+    "floor": 4,
+    "role": "Boss",
+    "name": "4F 荒城王座機",
+    "lv": 6,
+    "hp": 234,
+    "atk": 36,
+    "def": 9,
+    "xp": 188,
+    "gold": 162,
+    "drops": {
+      "weapon": 0.448,
+      "equipment": 0.496,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0065",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 掠奪者",
+    "lv": 5,
+    "hp": 52,
+    "atk": 15,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0066",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 鏽蜂",
+    "lv": 5,
+    "hp": 54,
+    "atk": 16,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0067",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 廢犬",
+    "lv": 5,
+    "hp": 56,
+    "atk": 17,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0068",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 碎片炮手",
+    "lv": 5,
+    "hp": 58,
+    "atk": 15,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0069",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 沙塵斥候",
+    "lv": 5,
+    "hp": 60,
+    "atk": 16,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0070",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 焦土工程機",
+    "lv": 5,
+    "hp": 62,
+    "atk": 17,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0071",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 污染行者",
+    "lv": 5,
+    "hp": 64,
+    "atk": 15,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0072",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 鐵皮蟲",
+    "lv": 5,
+    "hp": 66,
+    "atk": 16,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0073",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 斷線無人機",
+    "lv": 5,
+    "hp": 68,
+    "atk": 17,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0074",
+    "floor": 5,
+    "role": "普通",
+    "name": "5F 鐵渣狂徒",
+    "lv": 5,
+    "hp": 70,
+    "atk": 15,
+    "def": 3,
+    "xp": 30,
+    "gold": 25,
+    "drops": {
+      "weapon": 0.16999999999999998,
+      "equipment": 0.21000000000000002,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0075",
+    "floor": 5,
+    "role": "菁英",
+    "name": "5F 殘骸守衛",
+    "lv": 5,
+    "hp": 95,
+    "atk": 23,
+    "def": 5,
+    "xp": 59,
+    "gold": 52,
+    "drops": {
+      "weapon": 0.25,
+      "equipment": 0.3,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0076",
+    "floor": 5,
+    "role": "菁英",
+    "name": "5F 灰塵重裝",
+    "lv": 5,
+    "hp": 101,
+    "atk": 24,
+    "def": 5,
+    "xp": 59,
+    "gold": 52,
+    "drops": {
+      "weapon": 0.25,
+      "equipment": 0.3,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0077",
+    "floor": 5,
+    "role": "菁英",
+    "name": "5F 磁暴獵兵",
+    "lv": 5,
+    "hp": 107,
+    "atk": 25,
+    "def": 5,
+    "xp": 59,
+    "gold": 52,
+    "drops": {
+      "weapon": 0.25,
+      "equipment": 0.3,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0078",
+    "floor": 5,
+    "role": "菁英",
+    "name": "5F 脈衝執行者",
+    "lv": 5,
+    "hp": 113,
+    "atk": 26,
+    "def": 5,
+    "xp": 59,
+    "gold": 52,
+    "drops": {
+      "weapon": 0.25,
+      "equipment": 0.3,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0079",
+    "floor": 5,
+    "role": "MiniBoss",
+    "name": "5F 電弧獵首者",
+    "lv": 6,
+    "hp": 160,
+    "atk": 32,
+    "def": 7,
+    "xp": 115,
+    "gold": 105,
+    "drops": {
+      "weapon": 0.34,
+      "equipment": 0.39,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0080",
+    "floor": 5,
+    "role": "Boss",
+    "name": "5F 裂界相位巨獸",
+    "lv": 7,
+    "hp": 260,
+    "atk": 41,
+    "def": 9,
+    "xp": 210,
+    "gold": 180,
+    "drops": {
+      "weapon": 0.46,
+      "equipment": 0.51,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0081",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 掠奪者",
+    "lv": 6,
+    "hp": 58,
+    "atk": 17,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0082",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 鏽蜂",
+    "lv": 6,
+    "hp": 60,
+    "atk": 18,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0083",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 廢犬",
+    "lv": 6,
+    "hp": 62,
+    "atk": 19,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0084",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 碎片炮手",
+    "lv": 6,
+    "hp": 64,
+    "atk": 17,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0085",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 沙塵斥候",
+    "lv": 6,
+    "hp": 66,
+    "atk": 18,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0086",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 焦土工程機",
+    "lv": 6,
+    "hp": 68,
+    "atk": 19,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0087",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 污染行者",
+    "lv": 6,
+    "hp": 70,
+    "atk": 17,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0088",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 鐵皮蟲",
+    "lv": 6,
+    "hp": 72,
+    "atk": 18,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0089",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 斷線無人機",
+    "lv": 6,
+    "hp": 74,
+    "atk": 19,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0090",
+    "floor": 6,
+    "role": "普通",
+    "name": "6F 鐵渣狂徒",
+    "lv": 6,
+    "hp": 76,
+    "atk": 17,
+    "def": 4,
+    "xp": 34,
+    "gold": 28,
+    "drops": {
+      "weapon": 0.18,
+      "equipment": 0.22,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0091",
+    "floor": 6,
+    "role": "菁英",
+    "name": "6F 殘骸守衛",
+    "lv": 6,
+    "hp": 105,
+    "atk": 26,
+    "def": 6,
+    "xp": 66,
+    "gold": 58,
+    "drops": {
+      "weapon": 0.26,
+      "equipment": 0.312,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0092",
+    "floor": 6,
+    "role": "菁英",
+    "name": "6F 灰塵重裝",
+    "lv": 6,
+    "hp": 111,
+    "atk": 27,
+    "def": 6,
+    "xp": 66,
+    "gold": 58,
+    "drops": {
+      "weapon": 0.26,
+      "equipment": 0.312,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0093",
+    "floor": 6,
+    "role": "菁英",
+    "name": "6F 磁暴獵兵",
+    "lv": 6,
+    "hp": 117,
+    "atk": 28,
+    "def": 6,
+    "xp": 66,
+    "gold": 58,
+    "drops": {
+      "weapon": 0.26,
+      "equipment": 0.312,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0094",
+    "floor": 6,
+    "role": "菁英",
+    "name": "6F 脈衝執行者",
+    "lv": 6,
+    "hp": 123,
+    "atk": 29,
+    "def": 6,
+    "xp": 66,
+    "gold": 58,
+    "drops": {
+      "weapon": 0.26,
+      "equipment": 0.312,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0095",
+    "floor": 6,
+    "role": "MiniBoss",
+    "name": "6F 荒原獵犬王",
+    "lv": 7,
+    "hp": 176,
+    "atk": 36,
+    "def": 8,
+    "xp": 127,
+    "gold": 115,
+    "drops": {
+      "weapon": 0.35200000000000004,
+      "equipment": 0.404,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0096",
+    "floor": 6,
+    "role": "Boss",
+    "name": "6F 血焰熔爐",
+    "lv": 8,
+    "hp": 286,
+    "atk": 46,
+    "def": 10,
+    "xp": 232,
+    "gold": 198,
+    "drops": {
+      "weapon": 0.47200000000000003,
+      "equipment": 0.524,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0097",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 掠奪者",
+    "lv": 7,
+    "hp": 64,
+    "atk": 19,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0098",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 鏽蜂",
+    "lv": 7,
+    "hp": 66,
+    "atk": 20,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0099",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 廢犬",
+    "lv": 7,
+    "hp": 68,
+    "atk": 21,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0100",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 碎片炮手",
+    "lv": 7,
+    "hp": 70,
+    "atk": 19,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0101",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 沙塵斥候",
+    "lv": 7,
+    "hp": 72,
+    "atk": 20,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0102",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 焦土工程機",
+    "lv": 7,
+    "hp": 74,
+    "atk": 21,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0103",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 污染行者",
+    "lv": 7,
+    "hp": 76,
+    "atk": 19,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0104",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 鐵皮蟲",
+    "lv": 7,
+    "hp": 78,
+    "atk": 20,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0105",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 斷線無人機",
+    "lv": 7,
+    "hp": 80,
+    "atk": 21,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0106",
+    "floor": 7,
+    "role": "普通",
+    "name": "7F 鐵渣狂徒",
+    "lv": 7,
+    "hp": 82,
+    "atk": 19,
+    "def": 4,
+    "xp": 38,
+    "gold": 31,
+    "drops": {
+      "weapon": 0.19,
+      "equipment": 0.23,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0107",
+    "floor": 7,
+    "role": "菁英",
+    "name": "7F 殘骸守衛",
+    "lv": 7,
+    "hp": 115,
+    "atk": 29,
+    "def": 6,
+    "xp": 73,
+    "gold": 64,
+    "drops": {
+      "weapon": 0.27,
+      "equipment": 0.324,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0108",
+    "floor": 7,
+    "role": "菁英",
+    "name": "7F 灰塵重裝",
+    "lv": 7,
+    "hp": 121,
+    "atk": 30,
+    "def": 6,
+    "xp": 73,
+    "gold": 64,
+    "drops": {
+      "weapon": 0.27,
+      "equipment": 0.324,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0109",
+    "floor": 7,
+    "role": "菁英",
+    "name": "7F 磁暴獵兵",
+    "lv": 7,
+    "hp": 127,
+    "atk": 31,
+    "def": 6,
+    "xp": 73,
+    "gold": 64,
+    "drops": {
+      "weapon": 0.27,
+      "equipment": 0.324,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0110",
+    "floor": 7,
+    "role": "菁英",
+    "name": "7F 脈衝執行者",
+    "lv": 7,
+    "hp": 133,
+    "atk": 32,
+    "def": 6,
+    "xp": 73,
+    "gold": 64,
+    "drops": {
+      "weapon": 0.27,
+      "equipment": 0.324,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0111",
+    "floor": 7,
+    "role": "MiniBoss",
+    "name": "7F 鋼鐵蠍后",
+    "lv": 8,
+    "hp": 192,
+    "atk": 40,
+    "def": 8,
+    "xp": 139,
+    "gold": 125,
+    "drops": {
+      "weapon": 0.36400000000000005,
+      "equipment": 0.41800000000000004,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0112",
+    "floor": 7,
+    "role": "Boss",
+    "name": "7F 鐵潮母巢",
+    "lv": 9,
+    "hp": 312,
+    "atk": 51,
+    "def": 10,
+    "xp": 254,
+    "gold": 216,
+    "drops": {
+      "weapon": 0.48400000000000004,
+      "equipment": 0.538,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0113",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 掠奪者",
+    "lv": 8,
+    "hp": 70,
+    "atk": 21,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0114",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 鏽蜂",
+    "lv": 8,
+    "hp": 72,
+    "atk": 22,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0115",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 廢犬",
+    "lv": 8,
+    "hp": 74,
+    "atk": 23,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0116",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 碎片炮手",
+    "lv": 8,
+    "hp": 76,
+    "atk": 21,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0117",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 沙塵斥候",
+    "lv": 8,
+    "hp": 78,
+    "atk": 22,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0118",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 焦土工程機",
+    "lv": 8,
+    "hp": 80,
+    "atk": 23,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0119",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 污染行者",
+    "lv": 8,
+    "hp": 82,
+    "atk": 21,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0120",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 鐵皮蟲",
+    "lv": 8,
+    "hp": 84,
+    "atk": 22,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0121",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 斷線無人機",
+    "lv": 8,
+    "hp": 86,
+    "atk": 23,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0122",
+    "floor": 8,
+    "role": "普通",
+    "name": "8F 鐵渣狂徒",
+    "lv": 8,
+    "hp": 88,
+    "atk": 21,
+    "def": 5,
+    "xp": 42,
+    "gold": 34,
+    "drops": {
+      "weapon": 0.2,
+      "equipment": 0.24,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0123",
+    "floor": 8,
+    "role": "菁英",
+    "name": "8F 殘骸守衛",
+    "lv": 8,
+    "hp": 125,
+    "atk": 32,
+    "def": 7,
     "xp": 80,
-    "gold": 80,
+    "gold": 70,
+    "drops": {
+      "weapon": 0.28,
+      "equipment": 0.33599999999999997,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0124",
+    "floor": 8,
+    "role": "菁英",
+    "name": "8F 灰塵重裝",
+    "lv": 8,
+    "hp": 131,
+    "atk": 33,
+    "def": 7,
+    "xp": 80,
+    "gold": 70,
+    "drops": {
+      "weapon": 0.28,
+      "equipment": 0.33599999999999997,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0125",
+    "floor": 8,
+    "role": "菁英",
+    "name": "8F 磁暴獵兵",
+    "lv": 8,
+    "hp": 137,
+    "atk": 34,
+    "def": 7,
+    "xp": 80,
+    "gold": 70,
+    "drops": {
+      "weapon": 0.28,
+      "equipment": 0.33599999999999997,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0126",
+    "floor": 8,
+    "role": "菁英",
+    "name": "8F 脈衝執行者",
+    "lv": 8,
+    "hp": 143,
+    "atk": 35,
+    "def": 7,
+    "xp": 80,
+    "gold": 70,
+    "drops": {
+      "weapon": 0.28,
+      "equipment": 0.33599999999999997,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0127",
+    "floor": 8,
+    "role": "MiniBoss",
+    "name": "8F 裂盾巨兵",
+    "lv": 9,
+    "hp": 208,
+    "atk": 44,
+    "def": 9,
+    "xp": 151,
+    "gold": 135,
+    "drops": {
+      "weapon": 0.376,
+      "equipment": 0.432,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0128",
+    "floor": 8,
+    "role": "Boss",
+    "name": "8F 無光監視者",
+    "lv": 10,
+    "hp": 338,
+    "atk": 56,
+    "def": 11,
+    "xp": 276,
+    "gold": 234,
+    "drops": {
+      "weapon": 0.496,
+      "equipment": 0.552,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0129",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 掠奪者",
+    "lv": 9,
+    "hp": 76,
+    "atk": 23,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0130",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 鏽蜂",
+    "lv": 9,
+    "hp": 78,
+    "atk": 24,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0131",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 廢犬",
+    "lv": 9,
+    "hp": 80,
+    "atk": 25,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0132",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 碎片炮手",
+    "lv": 9,
+    "hp": 82,
+    "atk": 23,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0133",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 沙塵斥候",
+    "lv": 9,
+    "hp": 84,
+    "atk": 24,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0134",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 焦土工程機",
+    "lv": 9,
+    "hp": 86,
+    "atk": 25,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0135",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 污染行者",
+    "lv": 9,
+    "hp": 88,
+    "atk": 23,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0136",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 鐵皮蟲",
+    "lv": 9,
+    "hp": 90,
+    "atk": 24,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0137",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 斷線無人機",
+    "lv": 9,
+    "hp": 92,
+    "atk": 25,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0138",
+    "floor": 9,
+    "role": "普通",
+    "name": "9F 鐵渣狂徒",
+    "lv": 9,
+    "hp": 94,
+    "atk": 23,
+    "def": 5,
+    "xp": 46,
+    "gold": 37,
+    "drops": {
+      "weapon": 0.21,
+      "equipment": 0.25,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0139",
+    "floor": 9,
+    "role": "菁英",
+    "name": "9F 殘骸守衛",
+    "lv": 9,
+    "hp": 135,
+    "atk": 35,
+    "def": 7,
+    "xp": 87,
+    "gold": 76,
+    "drops": {
+      "weapon": 0.29000000000000004,
+      "equipment": 0.348,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0140",
+    "floor": 9,
+    "role": "菁英",
+    "name": "9F 灰塵重裝",
+    "lv": 9,
+    "hp": 141,
+    "atk": 36,
+    "def": 7,
+    "xp": 87,
+    "gold": 76,
+    "drops": {
+      "weapon": 0.29000000000000004,
+      "equipment": 0.348,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0141",
+    "floor": 9,
+    "role": "菁英",
+    "name": "9F 磁暴獵兵",
+    "lv": 9,
+    "hp": 147,
+    "atk": 37,
+    "def": 7,
+    "xp": 87,
+    "gold": 76,
+    "drops": {
+      "weapon": 0.29000000000000004,
+      "equipment": 0.348,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0142",
+    "floor": 9,
+    "role": "菁英",
+    "name": "9F 脈衝執行者",
+    "lv": 9,
+    "hp": 153,
+    "atk": 38,
+    "def": 7,
+    "xp": 87,
+    "gold": 76,
+    "drops": {
+      "weapon": 0.29000000000000004,
+      "equipment": 0.348,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0143",
+    "floor": 9,
+    "role": "MiniBoss",
+    "name": "9F 荒塔守門人",
+    "lv": 10,
+    "hp": 224,
+    "atk": 48,
+    "def": 9,
+    "xp": 163,
+    "gold": 145,
+    "drops": {
+      "weapon": 0.388,
+      "equipment": 0.446,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0144",
+    "floor": 9,
+    "role": "Boss",
+    "name": "9F 風暴指令塔",
+    "lv": 11,
+    "hp": 364,
+    "atk": 61,
+    "def": 11,
+    "xp": 298,
+    "gold": 252,
+    "drops": {
+      "weapon": 0.508,
+      "equipment": 0.5660000000000001,
+      "consumable": 0.45
+    }
+  },
+  {
+    "id": "m_0145",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 掠奪者",
+    "lv": 10,
+    "hp": 82,
+    "atk": 25,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0146",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 鏽蜂",
+    "lv": 10,
+    "hp": 84,
+    "atk": 26,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0147",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 廢犬",
+    "lv": 10,
+    "hp": 86,
+    "atk": 27,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0148",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 碎片炮手",
+    "lv": 10,
+    "hp": 88,
+    "atk": 25,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0149",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 沙塵斥候",
+    "lv": 10,
+    "hp": 90,
+    "atk": 26,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0150",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 焦土工程機",
+    "lv": 10,
+    "hp": 92,
+    "atk": 27,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0151",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 污染行者",
+    "lv": 10,
+    "hp": 94,
+    "atk": 25,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0152",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 鐵皮蟲",
+    "lv": 10,
+    "hp": 96,
+    "atk": 26,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0153",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 斷線無人機",
+    "lv": 10,
+    "hp": 98,
+    "atk": 27,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0154",
+    "floor": 10,
+    "role": "普通",
+    "name": "10F 鐵渣狂徒",
+    "lv": 10,
+    "hp": 100,
+    "atk": 25,
+    "def": 6,
+    "xp": 50,
+    "gold": 40,
+    "drops": {
+      "weapon": 0.22,
+      "equipment": 0.26,
+      "consumable": 0.2
+    }
+  },
+  {
+    "id": "m_0155",
+    "floor": 10,
+    "role": "菁英",
+    "name": "10F 殘骸守衛",
+    "lv": 10,
+    "hp": 145,
+    "atk": 38,
+    "def": 8,
+    "xp": 94,
+    "gold": 82,
+    "drops": {
+      "weapon": 0.30000000000000004,
+      "equipment": 0.36,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0156",
+    "floor": 10,
+    "role": "菁英",
+    "name": "10F 灰塵重裝",
+    "lv": 10,
+    "hp": 151,
+    "atk": 39,
+    "def": 8,
+    "xp": 94,
+    "gold": 82,
+    "drops": {
+      "weapon": 0.30000000000000004,
+      "equipment": 0.36,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0157",
+    "floor": 10,
+    "role": "菁英",
+    "name": "10F 磁暴獵兵",
+    "lv": 10,
+    "hp": 157,
+    "atk": 40,
+    "def": 8,
+    "xp": 94,
+    "gold": 82,
+    "drops": {
+      "weapon": 0.30000000000000004,
+      "equipment": 0.36,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0158",
+    "floor": 10,
+    "role": "菁英",
+    "name": "10F 脈衝執行者",
+    "lv": 10,
+    "hp": 163,
+    "atk": 41,
+    "def": 8,
+    "xp": 94,
+    "gold": 82,
+    "drops": {
+      "weapon": 0.30000000000000004,
+      "equipment": 0.36,
+      "consumable": 0.28
+    }
+  },
+  {
+    "id": "m_0159",
+    "floor": 10,
+    "role": "MiniBoss",
+    "name": "10F 電弧獵首者",
+    "lv": 11,
+    "hp": 240,
+    "atk": 52,
+    "def": 10,
+    "xp": 175,
+    "gold": 155,
     "drops": {
       "weapon": 0.4,
-      "armor": 0.4,
-      "core": 0.32,
+      "equipment": 0.46,
+      "consumable": 0.35
+    }
+  },
+  {
+    "id": "m_0160",
+    "floor": 10,
+    "role": "Boss",
+    "name": "10F 最終審判機",
+    "lv": 12,
+    "hp": 390,
+    "atk": 66,
+    "def": 12,
+    "xp": 320,
+    "gold": 270,
+    "drops": {
+      "weapon": 0.52,
+      "equipment": 0.5800000000000001,
       "consumable": 0.45
     }
   }
