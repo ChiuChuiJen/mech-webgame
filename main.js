@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.6';
+const VERSION = '0.1.7';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -69,7 +69,7 @@ async function loadDB(){
     ['consumables','data/consumable.json'],
     ['set_bonus','data/set_bonus.json'],
     ['monsters','data/monsters.json'],
-    ['drop_shop','data/drop_and_shop.json'],
+    ['drop_and_shop','data/drop_and_shop.json'],
   ];
   for (const [k,p] of files){
     const res = await fetch(p + '?v=' + VERSION);
@@ -1742,3 +1742,6 @@ try{
   if(typeof g.slotName === 'undefined') g.slotName = (slot)=> (typeof partLabel==='function' ? (partLabel(slot)||slot) : slot);
   if(typeof g.rankRarity === 'undefined') g.rankRarity = (r)=> (typeof rarityRank==='function' ? rarityRank(r) : 0);
 }catch(e){ /* ignore */ }
+
+
+try{ if(DB && !DB.drop_and_shop && DB.drop_shop) DB.drop_and_shop=DB.drop_shop; }catch(e){}
