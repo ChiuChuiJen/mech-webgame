@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.9';
+const VERSION = '0.2.0';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -1908,4 +1908,68 @@ function renderBattleModal(){
 
   // auto toggle sync
   const at=$('#bmAutoToggle'); if(at) at.checked = !!S.battleAuto;
+}
+
+
+
+/* ===== V0.2.0 HOTFIX: prevent same inventory item equipped in both hands ===== */
+
+// Wrap original equip(slot, uid) to enforce uniqueness by inventory uid.
+if(typeof equip === 'function' && typeof _equipWrapped === 'undefined'){
+  var _equipWrapped = true;
+  const _equipOld = equip;
+
+  equip = function(slot, uid){
+    // If this uid is already equipped in another slot, unequip it first.
+    try{
+      if(uid){
+        for(const [s,eqUid] of Object.entries(S.equipped||{})){
+          if(eqUid === uid && s !== slot){
+            S.equipped[s] = null;
+          }
+        }
+      }
+    }catch(e){}
+
+    // Special handling: weaponR/weaponL should never share the same uid
+    if(slot==='weaponR' || slot==='weaponL'){
+      const other = (slot==='weaponR') ? 'weaponL' : 'weaponR';
+      try{
+        if(S.equipped?.[other] === uid){
+          S.equipped[other] = null;
+        }
+      }catch(e){}
+    }
+
+    _equipOld(slot, uid);
+  };
+}
+
+// Also adjust equipInv to swap hands if already equipped
+if(typeof equipInv === 'function' && typeof _equipInvWrapped === 'undefined'){
+  var _equipInvWrapped = true;
+  const _equipInvOld = equipInv;
+
+  equipInv = function(uid){
+    const it = S.inventory.find(x=>x.uid===uid);
+    if(!it) return;
+
+    // If weapon already equipped in one hand, equip into the other hand by swapping (i.e., move it)
+    if(it.cat==='weapon'){
+      const r = S.equipped?.weaponR;
+      const l = S.equipped?.weaponL;
+      if(r===uid && l!==uid){
+        equip('weaponL', uid);
+        render();
+        return;
+      }
+      if(l===uid && r!==uid){
+        equip('weaponR', uid);
+        render();
+        return;
+      }
+    }
+
+    _equipInvOld(uid);
+  };
 }
