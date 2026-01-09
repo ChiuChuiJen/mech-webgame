@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.5';
+const VERSION = '0.2.6';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2431,7 +2431,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
 /* ===== V0.2.3 UPDATE: inventory category filter + auto next exploration toggle ===== */
 
 function ensureInvFilter(){
-  if(!S.invFilter) S.invFilter = 'all'; // all, weapon, equipment, consumable, skill
+  // S can be null during early boot
+  if(!S) return;
+  if(!S.invFilter) S.invFilter = 'all';
 }
 function invFilterLabel(k){
   return k==='all'?'全部':k==='weapon'?'武器':k==='equipment'?'防具/配件':k==='consumable'?'道具':'技能書';
@@ -2445,8 +2447,9 @@ function invFilterMatch(item){
 }
 
 function bindInvCats(){
-  const box = $('#invCats');
+  const box=$('#invCats');
   if(!box) return;
+  if(!S) return;
   // if buttons already exist, just bind
   const btns = box.querySelectorAll('button[data-cat]');
   btns.forEach(b=>{
@@ -2479,7 +2482,8 @@ function setNextModeUI(){
 
 // Toggle behavior: checkbox enables; clicking badge toggles mode
 document.addEventListener('DOMContentLoaded', ()=>{
-  bindInvCats();
+  // bindInvCats deferred until state ready
+  try{ if(S) bindInvCats(); }catch(e){}
   const t=$('#bmNextToggle');
   if(t) t.onchange = ()=>{
     ensureAutoNext();
@@ -2597,5 +2601,106 @@ if(typeof endBattle === 'function' && typeof _endBattleV023Wrapped === 'undefine
     _endBattlePrev(victory);
     // defer so UI updates first
     setTimeout(()=>{ try{ tryAutoNextAfterBattle(); }catch(e){} }, 60);
+  };
+}
+
+
+/* ===== V0.2.6 HOTFIX: boot-time null guards + skills UI refresh + ensure next toggle exists ===== */
+
+// Ensure inv filter defaults after state exists
+function ensureUiDefaults(){
+  if(!S) return;
+  if(!S.invFilter) S.invFilter='all';
+  if(typeof S.autoNextExplore==='undefined') S.autoNextExplore=false;
+  if(!S.autoNextMode) S.autoNextMode='single';
+  if(!S.skillsLearned) S.skillsLearned=['power','guard','over'];
+  if(!S.skillSlots) S.skillSlots=[null,null,null];
+}
+
+// Refresh skills pane whenever state changes and pane is visible
+function refreshSkillsIfVisible(){
+  try{
+    const pane = $('#pane-skills');
+    if(!pane) return;
+    const visible = !pane.classList.contains('hidden') && pane.style.display!=='none';
+    // also check selected tab button if present
+    if(visible) renderSkillsPane();
+  }catch(e){}
+}
+
+// Patch learnSkill to refresh UI
+if(typeof learnSkill === 'function' && typeof _learnSkillV026Wrapped === 'undefined'){
+  var _learnSkillV026Wrapped = true;
+  const _learnSkillPrev = learnSkill;
+  learnSkill = function(skillId){
+    const r = _learnSkillPrev(skillId);
+    if(r){ try{ refreshSkillsIfVisible(); }catch(e){} }
+    return r;
+  };
+}
+
+// Make renderSkillsPane safe when S not ready
+if(typeof renderSkillsPane === 'function' && typeof _renderSkillsPaneV026Wrapped === 'undefined'){
+  var _renderSkillsPaneV026Wrapped = true;
+  const _renderSkillsPanePrev = renderSkillsPane;
+  renderSkillsPane = function(){
+    if(!S) return;
+    ensureUiDefaults();
+    _renderSkillsPanePrev();
+  };
+}
+
+// Ensure battle "next explore" toggle exists even if HTML injection failed
+function ensureBattleNextToggle(){
+  const t = $('#bmNextToggle');
+  const m = $('#bmNextMode');
+  if(t && m) return;
+  const bar = document.querySelector('#battleModal .controls') || document.querySelector('#battleModal .row') || $('#battleModal');
+  if(!bar) return;
+
+  if(!document.getElementById('bmNextToggle')){
+    const lab=document.createElement('label');
+    lab.className='toggle';
+    lab.innerHTML='<input type="checkbox" id="bmNextToggle"> 下一場探索';
+    bar.appendChild(lab);
+  }
+  if(!document.getElementById('bmNextMode')){
+    const span=document.createElement('span');
+    span.className='badge';
+    span.id='bmNextMode';
+    span.textContent='單次';
+    bar.appendChild(span);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  // defer until after init
+  setTimeout(()=>{
+    try{
+      ensureBattleNextToggle();
+      if(S){
+        ensureUiDefaults();
+        bindInvCats();
+        setNextModeUI();
+        renderSkillSlotsUI();
+        refreshSkillsIfVisible();
+      }
+    }catch(e){}
+  }, 50);
+});
+
+// Wrap render to keep UI synced after state exists
+if(typeof render === 'function' && typeof _renderV026Wrapped === 'undefined'){
+  var _renderV026Wrapped = true;
+  const _renderPrev2 = render;
+  render = function(){
+    if(S) ensureUiDefaults();
+    _renderPrev2();
+    if(S){
+      try{ bindInvCats(); }catch(e){}
+      try{ setNextModeUI(); }catch(e){}
+      try{ renderSkillSlotsUI(); }catch(e){}
+      try{ refreshSkillsIfVisible(); }catch(e){}
+    }
   };
 }
