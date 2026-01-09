@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>機甲：廢土升等掉寶 (V0.2.2)</title>
+  <title>機甲：廢土升等掉寶 (V0.2.3)</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.2" />
+  <link rel="stylesheet" href="styles.css?v=0.2.3" />
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +13,7 @@
       <div class="logo">🤖</div>
       <div class="titles">
         <div class="name">機甲：廢土升等掉寶</div>
-        <div class="ver">V0.2.2 · GitHub Pages 可直接跑</div>
+        <div class="ver">V0.2.3 · GitHub Pages 可直接跑</div>
       </div>
     </div>
     <div class="top-actions">
@@ -185,7 +185,15 @@
             <button id="btnSalvageJunk" class="btn btn-danger">分解普通 (換金幣)</button>
             <div class="small muted">點物品可：裝備 / 解除 / 販售 / 分解。</div>
           </div>
-          <div id="invList" class="list"></div>
+          
+          <div class="invCats" id="invCats">
+            <button class="chip active" data-cat="all">全部</button>
+            <button class="chip" data-cat="weapon">武器</button>
+            <button class="chip" data-cat="equipment">防具/配件</button>
+            <button class="chip" data-cat="consumable">道具</button>
+            <button class="chip" data-cat="skill">技能書</button>
+          </div>
+<div id="invList" class="list"></div>
         </div>
 
         <div class="pane" id="pane-shop">
@@ -229,7 +237,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=0.2.2"></script>
+  <script src="main.js?v=0.2.3"></script>
 
   
   <dialog id="battleModal" class="battleModal">

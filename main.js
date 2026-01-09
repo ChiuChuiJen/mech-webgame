@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.2';
+const VERSION = '0.2.3';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2425,3 +2425,179 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // initial skills pane if opened
   renderSkillsPane();
 });
+
+
+
+/* ===== V0.2.3 UPDATE: inventory category filter + auto next exploration toggle ===== */
+
+function ensureInvFilter(){
+  if(!S.invFilter) S.invFilter = 'all'; // all, weapon, equipment, consumable, skill
+}
+function invFilterLabel(k){
+  return k==='all'?'全部':k==='weapon'?'武器':k==='equipment'?'防具/配件':k==='consumable'?'道具':'技能書';
+}
+function invFilterMatch(item){
+  ensureInvFilter();
+  const f=S.invFilter;
+  if(f==='all') return true;
+  if(f==='skill') return item.cat==='skillbook' || item.cat==='dao_book';
+  return item.cat===f;
+}
+
+function bindInvCats(){
+  const box = $('#invCats');
+  if(!box) return;
+  // if buttons already exist, just bind
+  const btns = box.querySelectorAll('button[data-cat]');
+  btns.forEach(b=>{
+    b.onclick = ()=>{
+      const k=b.getAttribute('data-cat');
+      S.invFilter = k;
+      btns.forEach(x=>x.classList.toggle('active', x.getAttribute('data-cat')===k));
+      render();
+    };
+  });
+  // initial active
+  ensureInvFilter();
+  btns.forEach(x=>x.classList.toggle('active', x.getAttribute('data-cat')===S.invFilter));
+}
+
+// Auto-next exploration after battle ends
+function ensureAutoNext(){
+  if(typeof S.autoNextExplore === 'undefined'){
+    S.autoNextExplore = false; // master toggle
+  }
+  if(!S.autoNextMode){
+    S.autoNextMode = 'single'; // single or loop
+  }
+}
+ensureAutoNext();
+
+function setNextModeUI(){
+  const t=$('#bmNextToggle');
+  const m=$('#bmNextMode');
+  if(t) t.checked = !!S.autoNextExplore;
+  if(m) m.textContent = (S.autoNextMode==='loop') ? '循環' : '單次';
+}
+
+// Toggle behavior: checkbox enables; clicking badge toggles mode
+document.addEventListener('DOMContentLoaded', ()=>{
+  bindInvCats();
+  const t=$('#bmNextToggle');
+  if(t) t.onchange = ()=>{
+    ensureAutoNext();
+    S.autoNextExplore = !!t.checked;
+    setNextModeUI();
+  };
+  const m=$('#bmNextMode');
+  if(m) m.onclick = ()=>{
+    ensureAutoNext();
+    S.autoNextMode = (S.autoNextMode==='loop') ? 'single' : 'loop';
+    setNextModeUI();
+  };
+});
+
+// Hook render() to keep UI synced
+if(typeof _renderV023Wrapped === 'undefined'){
+  var _renderV023Wrapped = true;
+  const _renderPrev = render;
+  render = function(){
+    ensureInvFilter();
+    ensureAutoNext();
+    _renderPrev();
+    bindInvCats();
+    setNextModeUI();
+  };
+}
+
+// Patch renderInventory to apply filter (works with our overridden inventory renderer in V0.2.2)
+if(typeof _renderInventoryFilterWrapped === 'undefined'){
+  var _renderInventoryFilterWrapped = true;
+  const _renderInventoryPrev = renderInventory;
+  renderInventory = function(){
+    _renderInventoryPrev();
+
+    const box=$('#invList');
+    if(!box) return;
+
+    // If inventory was rebuilt by V0.2.2 override, we need to rebuild again with filter applied.
+    const hasAny = S.inventory && S.inventory.length;
+    if(!hasAny) return;
+
+    // Only rebuild when filter != all to avoid double work
+    ensureInvFilter();
+    if(S.invFilter==='all') return;
+
+    // Rebuild using same logic as V0.2.2 extended renderer but filtered
+    const items=S.inventory.slice().filter(invFilterMatch).sort((a,b)=>{
+      const A=getItemById(a.cat,a.id), B=getItemById(b.cat,b.id);
+      const ra=rankRarity(A?.rarity||'普通'), rb=rankRarity(B?.rarity||'普通');
+      if(ra!==rb) return rb-ra;
+      return (A?.name||'').localeCompare(B?.name||'');
+    });
+
+    box.innerHTML = items.map(it=>{
+      const d=getItemById(it.cat,it.id);
+      const eq=isEquipped(it.uid);
+      const eqBadge = eq ? `<span class="badge equipped">已裝備</span>` : '';
+      const setBadge = d?.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
+      let desc='';
+      if(it.cat==='consumable'){
+        desc = itemDesc(it.cat,d);
+      } else if(it.cat==='skillbook' || it.cat==='dao_book'){
+        desc = `${escapeHtml(d.desc||'')}`;
+      } else {
+        const cmp = (it.cat==='weapon') ? bestCompareForWeapon(it) :
+                    (it.cat==='equipment') ? `${slotName(d.slot)}:${compareArrow(it.rating, getEquippedRating(d.slot))}` : '';
+        desc = `${instStatsText(it.cat,it,d)}<br>被動：${escapeHtml(d.passive||'—')}<br><span class="badge">比對：${cmp}</span>`;
+      }
+
+      const btnEquip = (it.cat==='weapon' || it.cat==='equipment') ? `<button class="btn" onclick="equipInv('${it.uid}')">裝備</button>` : '';
+      const btnUse = (it.cat==='consumable') ? `<button class="btn btn-primary" onclick="useConsumable('${it.uid}')">使用</button>` :
+                    (it.cat==='skillbook' || it.cat==='dao_book') ? `<button class="btn btn-primary" onclick="useSkillItem('${it.uid}')">使用</button>` : '';
+      const btnSell = `<button class="btn" onclick="sell('${it.uid}')">出售</button>`;
+
+      return `
+        <div class="card">
+          <div class="row">
+            <div class="title">${escapeHtml(d?.name||'—')} ${rarityBadge(d?.rarity||'普通')} ${it.cat==='weapon'||it.cat==='equipment' ? `<span class="badge">評分：${it.rating||1}</span>`:''} ${setBadge} ${eqBadge}</div>
+            <div class="row" style="gap:8px;">
+              ${btnUse}
+              ${btnEquip}
+              ${btnSell}
+            </div>
+          </div>
+          <div class="desc">${desc}</div>
+        </div>
+      `;
+    }).join('');
+  };
+}
+
+// After battle ends: auto next exploration
+function tryAutoNextAfterBattle(){
+  ensureAutoNext();
+  if(!S.autoNextExplore) return;
+
+  // Only proceed when battle is not active and we are on a result state (battle ended panel visible)
+  if(S.battle?.active) return;
+
+  // single mode: run one explore and then disable
+  if(S.autoNextMode==='single'){
+    S.autoNextExplore = false;
+  }
+  // Perform one explore step
+  explore();
+  render();
+}
+
+// Wrap endBattle (or battleEnd handler) to trigger auto next
+if(typeof endBattle === 'function' && typeof _endBattleV023Wrapped === 'undefined'){
+  var _endBattleV023Wrapped = true;
+  const _endBattlePrev = endBattle;
+  endBattle = function(victory){
+    _endBattlePrev(victory);
+    // defer so UI updates first
+    setTimeout(()=>{ try{ tryAutoNextAfterBattle(); }catch(e){} }, 60);
+  };
+}

@@ -329,3 +329,12 @@ dialog::backdrop{background: rgba(0,0,0,.55);}
 #skillList .card{border:1px solid rgba(255,255,255,.10);}
 .skillMeta{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;}
 .skillTag{font-size:11px; padding:3px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04);}
+
+/* V0.2.3 inventory categories */
+.invCats{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 8px;}
+.chip{padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.03); font-weight:900; font-size:12px; cursor:pointer;}
+.chip:hover{background: rgba(255,255,255,.06);}
+.chip.active{border-color: rgba(120,220,255,.35); background: rgba(120,220,255,.10);}
+
+/* battle next mode badge */
+#bmNextMode{min-width:44px; text-align:center;}
