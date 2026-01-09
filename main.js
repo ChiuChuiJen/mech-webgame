@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.4';
+const VERSION = '0.1.5';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -1730,3 +1730,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     };
   }
 });
+
+
+
+/* ===== V0.1.5 HOTFIX: fix undefined helpers blocking UI ===== */
+function slotName(slot){ return partLabel(slot) || slot; } // alias used by v0.1.4 override
+function rankRarity(r){ return rarityRank(r); } // alias used by v0.1.4 override sort
