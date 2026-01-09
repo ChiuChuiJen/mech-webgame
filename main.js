@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.1';
+const VERSION = '0.2.2';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2077,4 +2077,351 @@ document.addEventListener('DOMContentLoaded', ()=>{
     else openChangelogModal();
   };
   const clC = $('#clClose'); if(clC) clC.onclick = closeChangelogModal;
+});
+
+
+
+/* ===== V0.2.2 UPDATE: skills tab + 3 skill slots + skillbooks + dao book ===== */
+
+// Skill definitions (include basic + extra list)
+const SKILL_DB = [
+  {id:'power', name:'強力斬擊', type:'攻擊', element:'物理', cost:6, desc:'造成 160% 傷害，30% 機率使敵方「流血」(2回合，每回合-3HP)。', kind:'basic'},
+  {id:'guard', name:'防禦姿態', type:'防禦', element:'物理', cost:5, desc:'2回合內防禦 +3（增益）。', kind:'basic'},
+  {id:'over',  name:'過載爆發', type:'攻擊', element:'物理', cost:10, desc:'造成 220% 傷害，但自身獲得「過熱」(2回合，每回合-3MP)。', kind:'basic'},
+
+  // from 技能.txt
+  {id:'armor_break', name:'破甲重擊', type:'攻擊', element:'物理', cost:7, desc:'造成高額物理傷害，無視目標 20% 防禦。'},
+  {id:'triple_slash', name:'連刃斬', type:'攻擊', element:'物理', cost:8, desc:'連續攻擊 3 次，每次傷害遞增。'},
+  {id:'thunder_pierce', name:'雷霆穿刺', type:'攻擊', element:'雷', cost:8, desc:'直線穿透攻擊，命中後追加麻痺判定。'},
+  {id:'ice_burst', name:'冰封爆裂', type:'攻擊', element:'冰', cost:9, desc:'範圍傷害並降低敵人移動速度。'},
+  {id:'flame_impact', name:'灼焰衝擊', type:'攻擊', element:'火', cost:9, desc:'造成火焰傷害並附加燃燒。'},
+  {id:'void_rip', name:'虛空撕裂', type:'攻擊', element:'虛無', cost:11, desc:'削減目標最大生命值一定比例（Boss 對策）。'},
+  {id:'star_judge', name:'星能裁決', type:'攻擊', element:'星', cost:10, desc:'依自身 INT 與 LUK 加成傷害（高成長）。'},
+  {id:'chaos_release', name:'混沌釋放', type:'攻擊', element:'混沌', cost:10, desc:'隨機元素傷害，可能觸發額外效果（高風險高報酬）。'},
+  {id:'iron_guard', name:'鋼鐵守勢', type:'防禦', element:'物理', cost:8, desc:'短時間大幅提高防禦與減傷（坦克核心）。'},
+  {id:'elem_shield', name:'元素護盾', type:'防禦', element:'全', cost:9, desc:'吸收一定量的元素傷害（泛用防護）。'},
+  {id:'swift_dodge', name:'迅影閃避', type:'防禦', element:'身法', cost:8, desc:'大幅提高閃避率，持續數秒（AGI 生存）。'},
+  {id:'mind_barrier', name:'心靈壁壘', type:'防禦', element:'精神', cost:8, desc:'提高狀態抗性，免疫控制效果（對抗控制）。'},
+  {id:'counter_stance', name:'反擊姿態', type:'攻防', element:'物理', cost:9, desc:'受到攻擊時自動反擊並減傷（反打流）。'},
+];
+
+function getSkill(id){ return SKILL_DB.find(s=>s.id===id) || null; }
+function skillName(id){ return getSkill(id)?.name || '—'; }
+function isBasicSkill(id){ return getSkill(id)?.kind === 'basic'; }
+
+// Extend getItemById to support skillbook & dao book
+if(typeof _getItemByIdWrapped === 'undefined'){
+  var _getItemByIdWrapped = true;
+  const _getItemByIdOld = getItemById;
+  getItemById = function(cat,id){
+    if(cat==='skillbook'){
+      const sk=getSkill(id);
+      if(!sk) return {id, name:`技能書（未知）`, rarity:'普通', desc:'—'};
+      return {id, name:`技能書：${sk.name}`, rarity:'普通', desc:`學會技能：${sk.name}`};
+    }
+    if(cat==='dao_book'){
+      return {id:'dao', name:'大道天書', rarity:'傳說', desc:'使用後隨機獲得一本技能書。'};
+    }
+    return _getItemByIdOld(cat,id);
+  };
+}
+
+// Ensure state fields
+function ensureSkillState(){
+  if(!S.skillsLearned){
+    S.skillsLearned = ['power','guard','over']; // basic skills learned by default
+  }
+  if(!S.skillSlots){
+    S.skillSlots = [null,null,null]; // 3 slots
+  }
+}
+ensureSkillState();
+
+// Render skill slots in equipment UI
+function renderSkillSlotsUI(){
+  ensureSkillState();
+  const ids=S.skillSlots;
+  const e1=$('#eqSkill1'), e2=$('#eqSkill2'), e3=$('#eqSkill3');
+  if(e1) e1.textContent = ids[0] ? skillName(ids[0]) : '—';
+  if(e2) e2.textContent = ids[1] ? skillName(ids[1]) : '—';
+  if(e3) e3.textContent = ids[2] ? skillName(ids[2]) : '—';
+
+  const s1=$('#skEq1'), s2=$('#skEq2'), s3=$('#skEq3');
+  if(s1) s1.textContent = ids[0] ? skillName(ids[0]) : '—';
+  if(s2) s2.textContent = ids[1] ? skillName(ids[1]) : '—';
+  if(s3) s3.textContent = ids[2] ? skillName(ids[2]) : '—';
+}
+
+// Skills pane render
+function renderSkillsPane(){
+  ensureSkillState();
+  const box=$('#skillList');
+  if(!box) return;
+
+  const learned = S.skillsLearned.slice().map(id=>getSkill(id)).filter(Boolean);
+  learned.sort((a,b)=> (isBasicSkill(a.id)?-1:1) - (isBasicSkill(b.id)?-1:1) || a.name.localeCompare(b.name));
+
+  box.innerHTML = learned.map(sk=>{
+    const tags = `<div class="skillMeta">
+      <span class="skillTag">${escapeHtml(sk.type||'—')}</span>
+      <span class="skillTag">${escapeHtml(sk.element||'—')}</span>
+      <span class="skillTag">MP ${sk.cost}</span>
+      ${isBasicSkill(sk.id) ? `<span class="skillTag">基本</span>` : ``}
+    </div>`;
+    const eq = S.skillSlots.includes(sk.id);
+    const eqBadge = eq ? `<span class="badge equipped">已裝備</span>` : '';
+    const btns = [0,1,2].map(i=>{
+      const label = `裝備到槽${i+1}`;
+      const dis = (S.skillSlots[i]===sk.id) ? 'disabled' : '';
+      return `<button class="btn btn-primary" ${dis} onclick="equipSkillSlot(${i}, '${sk.id}')">${label}</button>`;
+    }).join(' ');
+    return `<div class="card">
+      <div class="row">
+        <div class="title">${escapeHtml(sk.name)} ${eqBadge}</div>
+        <div class="badge">MP ${sk.cost}</div>
+      </div>
+      <div class="desc">${escapeHtml(sk.desc||'—')}${tags}</div>
+      <div class="row" style="gap:8px; flex-wrap:wrap; margin-top:10px;">${btns}</div>
+    </div>`;
+  }).join('');
+
+  renderSkillSlotsUI();
+}
+
+function equipSkillSlot(idx, skillId){
+  ensureSkillState();
+  if(idx<0 || idx>2) return;
+  if(!S.skillsLearned.includes(skillId)){
+    log('尚未學會此技能。'); return;
+  }
+  S.skillSlots[idx]=skillId;
+  log(`技能槽${idx+1}：裝備「${skillName(skillId)}」`);
+  render();
+}
+
+// Hook skill slots buttons to open skills tab
+function bindSkillSlotButtons(){
+  const go = ()=>{ switchTab('skills'); };
+  const b1=$('#eqSkill1'), b2=$('#eqSkill2'), b3=$('#eqSkill3');
+  if(b1) b1.onclick=go;
+  if(b2) b2.onclick=go;
+  if(b3) b3.onclick=go;
+}
+
+// Add inventory item usage for skill books + dao book
+function learnSkill(skillId){
+  ensureSkillState();
+  if(S.skillsLearned.includes(skillId)){
+    log(`已學會：${skillName(skillId)}`); return false;
+  }
+  S.skillsLearned.push(skillId);
+  log(`學會技能：${skillName(skillId)}`);
+  return true;
+}
+
+function useSkillItem(uid){
+  const inv=getInvItem(uid);
+  if(!inv) return;
+
+  if(inv.cat==='skillbook'){
+    const ok = learnSkill(inv.id);
+    if(ok) S.inventory=S.inventory.filter(x=>x.uid!==uid);
+    render();
+    return;
+  }
+  if(inv.cat==='dao_book'){
+    // random skillbook (excluding basics)
+    const pool = SKILL_DB.filter(s=>!isBasicSkill(s.id)).map(s=>s.id);
+    const sid = pick(pool);
+    S.inventory.push({uid:safeId('inv'), cat:'skillbook', id:sid});
+    log(`大道天書發光！獲得：技能書「${skillName(sid)}」`);
+    S.inventory=S.inventory.filter(x=>x.uid!==uid);
+    render();
+    return;
+  }
+}
+
+// Patch renderInventory to show "使用" for skillbook/dao_book
+if(typeof _renderInventorySkillsWrapped === 'undefined'){
+  var _renderInventorySkillsWrapped = true;
+  const _renderInventoryOld = renderInventory;
+  renderInventory = function(){
+    _renderInventoryOld();
+
+    // After base render, inject "使用" buttons for skillbook/dao_book cards (simple re-render override approach)
+    const box=$('#invList');
+    if(!box) return;
+
+    // replace button sets by re-rendering fully (safer than DOM patching): we provide a new renderer if items exist
+    const hasExtra = S.inventory.some(it=>it.cat==='skillbook' || it.cat==='dao_book');
+    if(!hasExtra) return;
+
+    // rebuild with our extended rules (similar to v0.1.4 override)
+    const items=S.inventory.slice().sort((a,b)=>{
+      const A=getItemById(a.cat,a.id), B=getItemById(b.cat,b.id);
+      const ra=rankRarity(A?.rarity||'普通'), rb=rankRarity(B?.rarity||'普通');
+      if(ra!==rb) return rb-ra;
+      return (A?.name||'').localeCompare(B?.name||'');
+    });
+
+    box.innerHTML = items.map(it=>{
+      const d=getItemById(it.cat,it.id);
+      const eq=isEquipped(it.uid);
+      const eqBadge = eq ? `<span class="badge equipped">已裝備</span>` : '';
+      const setBadge = d?.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
+      const rating = it.rating || (it.cat==='consumable' ? '' : it.cat==='skillbook' || it.cat==='dao_book' ? '' : '1');
+
+      let cmp='';
+      if(it.cat==='weapon'){
+        cmp = bestCompareForWeapon(it);
+      } else if(it.cat==='equipment'){
+        const slot=d.slot;
+        cmp = `${slotName(slot)}:${compareArrow(it.rating, getEquippedRating(slot))}`;
+      }
+
+      let desc='';
+      if(it.cat==='consumable'){
+        desc = itemDesc(it.cat,d);
+      } else if(it.cat==='skillbook'){
+        desc = `${escapeHtml(d.desc||'')}`;
+      } else if(it.cat==='dao_book'){
+        desc = `${escapeHtml(d.desc||'')}`;
+      } else {
+        desc = `${instStatsText(it.cat,it,d)}<br>被動：${escapeHtml(d.passive||'—')}<br><span class="badge">比對：${cmp}</span>`;
+      }
+
+      const btnEquip = (it.cat==='weapon' || it.cat==='equipment') ? `<button class="btn" onclick="equipInv('${it.uid}')">裝備</button>` : '';
+      const btnUse = (it.cat==='consumable') ? `<button class="btn btn-primary" onclick="useConsumable('${it.uid}')">使用</button>` :
+                    (it.cat==='skillbook' || it.cat==='dao_book') ? `<button class="btn btn-primary" onclick="useSkillItem('${it.uid}')">使用</button>` : '';
+      const btnSell = `<button class="btn" onclick="sell('${it.uid}')">出售</button>`;
+
+      return `
+        <div class="card">
+          <div class="row">
+            <div class="title">${escapeHtml(d?.name||'—')} ${rarityBadge(d?.rarity||'普通')} ${it.cat==='weapon'||it.cat==='equipment' ? `<span class="badge">評分：${it.rating||1}</span>`:''} ${setBadge} ${eqBadge}</div>
+            <div class="row" style="gap:8px;">
+              ${btnUse}
+              ${btnEquip}
+              ${btnSell}
+            </div>
+          </div>
+          <div class="desc">${desc}</div>
+        </div>
+      `;
+    }).join('');
+  };
+}
+
+// Make Dao book always available in shop, and allow buying skillbooks
+if(typeof _rerollShopV022Wrapped === 'undefined'){
+  var _rerollShopV022Wrapped = true;
+  const _rerollShopOld = rerollShop;
+  rerollShop = function(){
+    _rerollShopOld();
+
+    // ensure shop exists
+    if(!S.shop) S.shop={items:[]};
+
+    // add Dao book always (unique)
+    if(!S.shop.items.some(x=>x.cat==='dao_book')){
+      S.shop.items.unshift({uid:safeId('shop'), cat:'dao_book', id:'dao', price:120, revealed:true});
+    }
+
+    // add 2 basic purchasable skillbooks (beginner)
+    const basicsForShop = ['armor_break','triple_slash','iron_guard'];
+    for(const sid of basicsForShop){
+      if(S.shop.items.some(x=>x.cat==='skillbook' && x.id===sid)) continue;
+      S.shop.items.push({uid:safeId('shop'), cat:'skillbook', id:sid, price:60, revealed:true});
+    }
+  };
+}
+
+// Patch buyFromShop to support skillbook/dao_book categories
+if(typeof _buyFromShopV022Wrapped === 'undefined'){
+  var _buyFromShopV022Wrapped = true;
+  const _buyFromShopOld = buyFromShop;
+  buyFromShop = function(uid){
+    const it=S.shop.items.find(x=>x.uid===uid);
+    if(!it) return;
+
+    if(it.cat==='skillbook' || it.cat==='dao_book'){
+      if(S.gold < it.price) return;
+      S.gold -= it.price;
+      S.inventory.push({uid:safeId('inv'), cat:it.cat, id:it.id});
+      log(`購買：${getItemById(it.cat,it.id).name} (-${it.price} 金)`);
+      S.shop.items=S.shop.items.filter(x=>x.uid!==uid);
+      render();
+      return;
+    }
+    _buyFromShopOld(uid);
+  };
+}
+
+// Patch rollDrops to include chance for skillbook
+if(typeof _rollDropsV022Wrapped === 'undefined'){
+  var _rollDropsV022Wrapped = true;
+  const _rollDropsOld = rollDrops;
+  rollDrops = function(enemy){
+    const res=_rollDropsOld(enemy);
+    // extra drop chance for skillbook
+    const chance = (enemy?.role==='Boss') ? 0.30 : 0.10;
+    if(pct(chance)){
+      const pool = SKILL_DB.filter(s=>!isBasicSkill(s.id)).map(s=>s.id);
+      res.push({uid:safeId('inv'), cat:'skillbook', id:pick(pool)});
+    }
+    return res;
+  };
+}
+
+// Battle: show 3 equipped skill slots in skill list (below basic skills)
+if(typeof _renderBattleModalV022Wrapped === 'undefined'){
+  var _renderBattleModalV022Wrapped = true;
+  const _renderBattleModalOld = renderBattleModal;
+  renderBattleModal = function(){
+    _renderBattleModalOld();
+    ensureSkillState();
+
+    const sk=$('#bmSkills');
+    if(!sk) return;
+
+    // Append equipped slots display under existing buttons
+    const eq = S.skillSlots.map((id,idx)=>{
+      if(!id) return `<button class="btn btn-skill" disabled>槽${idx+1}（空）</button>`;
+      const s=getSkill(id);
+      const dis = (!S.battle.active || S.en < s.cost) ? 'disabled' : '';
+      return `<button class="btn btn-skill" ${dis} title="${escapeHtml(s.desc)}" onclick="castSkill('${s.id}')">槽${idx+1}：${escapeHtml(s.name)} <span class="muted">MP${s.cost}</span></button>`;
+    }).join('');
+
+    sk.innerHTML = sk.innerHTML + `<div style="height:8px;"></div>` + eq;
+  };
+}
+
+// Tab switch hook: when entering skills tab, render
+if(typeof switchTab === 'function' && typeof _switchTabV022Wrapped === 'undefined'){
+  var _switchTabV022Wrapped = true;
+  const _switchTabOld = switchTab;
+  switchTab = function(tab){
+    _switchTabOld(tab);
+    if(tab==='skills') renderSkillsPane();
+    renderSkillSlotsUI();
+  };
+}
+
+// Ensure render() also keeps skill slots updated
+if(typeof _renderV022Wrapped === 'undefined'){
+  var _renderV022Wrapped = true;
+  const _renderOld = render;
+  render = function(){
+    ensureSkillState();
+    _renderOld();
+    renderSkillSlotsUI();
+  };
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  ensureSkillState();
+  bindSkillSlotButtons();
+  renderSkillSlotsUI();
+  // initial skills pane if opened
+  renderSkillsPane();
 });

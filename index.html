@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>機甲：廢土升等掉寶 (V0.2.1)</title>
+  <title>機甲：廢土升等掉寶 (V0.2.2)</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.1" />
+  <link rel="stylesheet" href="styles.css?v=0.2.2" />
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +13,7 @@
       <div class="logo">🤖</div>
       <div class="titles">
         <div class="name">機甲：廢土升等掉寶</div>
-        <div class="ver">V0.2.1 · GitHub Pages 可直接跑</div>
+        <div class="ver">V0.2.2 · GitHub Pages 可直接跑</div>
       </div>
     </div>
     <div class="top-actions">
@@ -89,6 +89,25 @@
             </div>
           </div>
 
+          <div class="subhd" style="margin-top:10px;">
+            <h3>技能槽（戰鬥可用）</h3>
+            <div class="small">在「技能」分頁設定</div>
+          </div>
+          <div class="equipgrid" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+            <div class="slot">
+              <div class="lbl">技能槽 1</div>
+              <button class="slotbtn" id="eqSkill1">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">技能槽 2</div>
+              <button class="slotbtn" id="eqSkill2">—</button>
+            </div>
+            <div class="slot">
+              <div class="lbl">技能槽 3</div>
+              <button class="slotbtn" id="eqSkill3">—</button>
+            </div>
+          </div>
+
           <div class="totals">
             <div class="kpi"><span>攻擊</span><b id="atk">0</b></div>
             <div class="kpi"><span>防禦</span><b id="def">0</b></div>
@@ -107,12 +126,28 @@
           <button class="tab active" data-tab="explore">探索</button>
           <button class="tab" data-tab="battle">戰鬥</button>
           <button class="tab" data-tab="inventory">背包</button>
+          <button class="tab" data-tab="skills">技能</button>
           <button class="tab" data-tab="shop">雜貨店</button>
           <button class="tab" data-tab="log">歷程</button>
         </div>
       </div>
 
       <div class="tabpanes">
+        <div class="pane" id="pane-skills">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div>
+              <div class="muted">已學會技能</div>
+              <div class="small">在此裝備你要在戰鬥中使用的技能（3 格）</div>
+            </div>
+            <div class="row" style="gap:8px;">
+              <span class="badge">槽1：<b id="skEq1">—</b></span>
+              <span class="badge">槽2：<b id="skEq2">—</b></span>
+              <span class="badge">槽3：<b id="skEq3">—</b></span>
+            </div>
+          </div>
+          <div id="skillList" class="list"></div>
+        </div>
+
         <div class="pane active" id="pane-explore">
           <div class="row">
             <button id="btnExplore" class="btn btn-primary">開始探索</button>
@@ -194,7 +229,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=0.2.1"></script>
+  <script src="main.js?v=0.2.2"></script>
 
   
   <dialog id="battleModal" class="battleModal">
