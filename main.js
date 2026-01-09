@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.4';
+const VERSION = '0.2.5';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2464,15 +2464,12 @@ function bindInvCats(){
 
 // Auto-next exploration after battle ends
 function ensureAutoNext(){
-  if(typeof S.autoNextExplore === 'undefined'){
-    S.autoNextExplore = false; // master toggle
-  }
-  if(!S.autoNextMode){
-    S.autoNextMode = 'single'; // single or loop
-  }
+  // S can be null during early boot
+  if(!S) return;
+  if(typeof S.autoNextExplore === 'undefined') S.autoNextExplore = false;
+  if(!S.autoNextMode) S.autoNextMode = 'single';
 }
-ensureAutoNext();
-
+// ensureAutoNext() deferred until after state is available
 function setNextModeUI(){
   const t=$('#bmNextToggle');
   const m=$('#bmNextMode');
