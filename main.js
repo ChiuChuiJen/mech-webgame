@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.2';
+const VERSION = '0.1.3';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -91,6 +91,7 @@ const defaultState = ()=>({
   equipped: { weaponR:null, weaponL:null, head:null, body:null, arms:null, legs:null, booster:null, core:null },
   area: { floor:1, unlocked:1, depth:1, name:'1F 廢土區·深度1' },
   battle: { active:false, enemy:null, enemyHp:0, enemyHpMax:0, firstHitTaken:true },
+  battleLog: [],
   shop: { items: [] },
   log: []
 });
@@ -198,6 +199,11 @@ function gainXP(x){
 }
 
 // Log
+function blog(msg){
+  S.battleLog.unshift(msg);
+  if(S.battleLog.length>120) S.battleLog.length=120;
+}
+
 function log(msg){
   const t = new Date().toLocaleTimeString('zh-Hant', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
   S.log.unshift(`[${t}] ${msg}`);
@@ -286,6 +292,7 @@ function render(){
   $('#passives').textContent = pass.length?`被動：${pass.join(' / ')}`:'被動：—';
 
   renderBattle();
+  renderBattleModal();
   renderInventory();
   renderShop();
   renderLog();
@@ -320,6 +327,53 @@ function renderBattle(){
   $('#enemyInfo').textContent = `等級 ${b.enemy.lv} · 攻 ${b.enemy.atk} · 防 ${b.enemy.def}`;
   $('#battleHint').textContent = '選擇攻擊或技能。';
 }
+
+
+function renderBattleModal(){
+  const dlg = $('#battleModal');
+  if(!dlg) return;
+
+  const b=S.battle;
+  const st=stats();
+
+  // player
+  $('#bmPlayerHp').textContent = `${S.hp} / ${st.hpMax}`;
+  $('#bmPlayerMp').textContent = `${S.en} / ${st.enMax}`;
+  $('#bmPlayerAtk').textContent = st.atk;
+  $('#bmPlayerDef').textContent = st.def;
+  setBar('#bmPlayerHpBar', S.hp, st.hpMax);
+  setBar('#bmPlayerMpBar', S.en, st.enMax);
+
+  if(!b.active){
+    $('#bmEnemyName').textContent = '—';
+    $('#bmEnemyHp').textContent = '—';
+    $('#bmEnemyAtk').textContent = '—';
+    $('#bmEnemyDef').textContent = '—';
+    setBar('#bmEnemyHpBar', 0, 1);
+    $('#bmHint').textContent = '未在戰鬥中。';
+    $('#bmAttack')?.setAttribute('disabled','disabled');
+    $('#bmSkill')?.setAttribute('disabled','disabled');
+    $('#bmFlee')?.setAttribute('disabled','disabled');
+  } else {
+    $('#bmEnemyName').textContent = `${b.enemy.name} · ${b.enemy.role}`;
+    $('#bmEnemyHp').textContent = `${b.enemyHp} / ${b.enemyHpMax}`;
+    $('#bmEnemyAtk').textContent = b.enemy.atk;
+    $('#bmEnemyDef').textContent = b.enemy.def;
+    setBar('#bmEnemyHpBar', b.enemyHp, b.enemyHpMax);
+    $('#bmHint').textContent = '選擇攻擊或技能。';
+    $('#bmAttack')?.removeAttribute('disabled');
+    $('#bmSkill')?.removeAttribute('disabled');
+    $('#bmFlee')?.removeAttribute('disabled');
+  }
+
+  const box=$('#bmLogBox');
+  if(box){
+    const lines = S.battleLog.slice(0,60).reverse();
+    box.innerHTML = lines.length ? lines.map(s=>`<div class="line">${escapeHtml(s)}</div>`).join('') : `<div class="line muted">（尚無戰鬥紀錄）</div>`;
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
 
 function renderInventory(){
   const list=$('#invList');
@@ -539,36 +593,76 @@ function pickEnemy(){
 function startBattle(){
   const enemy=structuredClone(pickEnemy());
   S.battle = { active:true, enemy, enemyHp:enemy.hp, enemyHpMax:enemy.hp, firstHitTaken:true };
+  S.battleLog = [];
+  const rew = $('#bmRewards'); if(rew){ rew.style.display='none'; rew.innerHTML=''; }
+  blog(`遇敵：${enemy.name}（${enemy.role}）`);
   log(`遇敵：${enemy.name}（${enemy.role}）`);
+  const dlg = $('#battleModal');
+  if(dlg && !dlg.open) dlg.showModal();
   render();
 }
 
 function endBattle(victory){
   const b=S.battle;
   if(!b.active) return;
+
+  const dlg = $('#battleModal');
+  const rewBox = $('#bmRewards');
+
   if(victory){
     const e=b.enemy;
     const g = e.gold + rnd(0, Math.max(3, Math.floor(e.gold*0.25)));
     S.gold += g;
     gainXP(e.xp);
+
+    blog(`勝利！+${e.xp} EXP、+${g} 金`);
     log(`勝利！+${e.xp} EXP、+${g} 金`);
+
+    let extra = '';
     if(e.role==='Boss'){
       if((S.area.unlocked||1) < 10 && S.area.floor===S.area.unlocked){
         S.area.unlocked += 1;
+        blog(`Boss 擊破！已解鎖 ${S.area.unlocked}F。`);
         log(`Boss 擊破！已解鎖 ${S.area.unlocked}F。`);
+        extra = `解鎖：${S.area.unlocked}F`;
       }
     }
+
     const drops=rollDrops(e);
+    let dropText = '無';
     if(drops.length){
       drops.forEach(it=>S.inventory.push(it));
-      log(`掉落：${drops.map(it=>getItemById(it.cat,it.id).name).join('、')}`);
+      dropText = drops.map(it=>getItemById(it.cat,it.id).name).join('、');
+      blog(`掉落：${dropText}`);
+      log(`掉落：${dropText}`);
     } else {
+      blog('沒有掉落。');
       log('沒有掉落。');
     }
+
+    if(rewBox){
+      rewBox.style.display='block';
+      rewBox.innerHTML = `
+        <div style="font-weight:900; margin-bottom:6px;">戰鬥結算</div>
+        <div>EXP：+${e.xp}</div>
+        <div>金幣：+${g}</div>
+        <div>掉落：${escapeHtml(dropText)}</div>
+        ${extra?`<div>${escapeHtml(extra)}</div>`:''}
+      `;
+    }
+  } else {
+    blog('戰鬥結束。');
+    if(rewBox){
+      rewBox.style.display='block';
+      rewBox.innerHTML = `<div style="font-weight:900; margin-bottom:6px;">戰鬥結束</div><div>你已撤退或戰鬥中止。</div>`;
+    }
   }
+
   S.battle.active=false;
   tickBuffs(1);
   render();
+
+  if(dlg && !dlg.open) dlg.showModal();
 }
 
 function enemyTurn(){
@@ -588,6 +682,7 @@ function enemyTurn(){
   dmg = Math.max(1, dmg - (st.bonus.dmgReduce||0));
 
   S.hp = Math.max(0, S.hp - dmg);
+  blog(`${b.enemy.name} 反擊：-${dmg} HP`);
   log(`${b.enemy.name} 反擊：-${dmg} HP`);
 
   applyTurnRegen();
@@ -645,9 +740,11 @@ function playerAttack(isSkill){
   const ls = st.ls/100;
   if(ls>0){
     const heal=Math.floor(dmg*ls);
-    if(heal>0){ S.hp = clamp(S.hp + heal, 0, st.hpMax); log(`吸血：+${heal} HP`); }
+    if(heal>0){ S.hp = clamp(S.hp + heal, 0, st.hpMax); blog(`吸血：+${heal} HP`);
+      log(`吸血：+${heal} HP`); }
   }
 
+  blog(`${isSkill?'技能':'攻擊'}命中：-${dmg} HP${isCrit?'（暴擊）':''}`);
   log(`${isSkill?'技能':'攻擊'}命中：-${dmg} HP${isCrit?'（暴擊）':''}`);
   applyTurnRegen();
 
@@ -949,7 +1046,7 @@ async function boot(){
   $('#btnFlee').onclick = ()=>{
     const st=stats();
     const chance = clamp(0.45 + (st.bonus.flee||0)/100, 0.10, 0.90);
-    if(pct(chance)){ log('撤退成功。'); S.battle.active=false; tickBuffs(1); render(); }
+    if(pct(chance)){ blog('撤退成功。'); log('撤退成功。'); endBattle(false); }
     else { log('撤退失敗！'); enemyTurn(); }
   };
 
@@ -973,6 +1070,30 @@ async function boot(){
 
   const pfPrev=$('#btnPrevFloor'); if(pfPrev) pfPrev.onclick=prevFloor;
   const pfNext=$('#btnNextFloor'); if(pfNext) pfNext.onclick=nextFloor;
+
+  // Battle modal buttons
+  const bmA = $('#bmAttack'); if(bmA) bmA.onclick = ()=>playerAttack(false);
+  const bmS = $('#bmSkill');  if(bmS) bmS.onclick = ()=>playerAttack(true);
+  const bmF = $('#bmFlee');   if(bmF) bmF.onclick = ()=>$('#btnFlee').click();
+
+  const dlgBattle = $('#battleModal');
+  const bmClose = $('#bmClose');
+  if(dlgBattle){
+    dlgBattle.addEventListener('cancel', (e)=>{
+      if(S.battle.active){ e.preventDefault(); }
+    });
+  }
+  if(bmClose && dlgBattle){
+    bmClose.onclick = ()=>{
+      if(S.battle.active){
+        blog('（提示）戰鬥進行中，無法關閉視窗。');
+        log('戰鬥進行中，無法關閉戰鬥視窗。');
+        render();
+        return;
+      }
+      dlgBattle.close();
+    };
+  }
 
   setupEquipSlotModal();
   rerollShop();
