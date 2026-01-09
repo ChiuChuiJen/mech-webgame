@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.3';
+const VERSION = '0.1.4';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -1101,3 +1101,632 @@ async function boot(){
 }
 
 window.addEventListener('DOMContentLoaded', boot);
+
+
+
+/* ===== V0.1.4 PATCH: RPG battle + rolled stats + ratings + compare arrows ===== */
+
+// Skills
+const SKILLS = [
+  {id:'power', name:'強力斬擊', cost:6, desc:'造成 160% 傷害，30% 機率使敵方「流血」(2回合，每回合-3HP)。'},
+  {id:'guard', name:'防禦姿態', cost:5, desc:'2回合內防禦 +3（增益）。'},
+  {id:'over',  name:'過載爆發', cost:10, desc:'造成 220% 傷害，但自身獲得「過熱」(2回合，每回合-3MP)。'}
+];
+
+let _autoTimer=null;
+
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+function calcRating(cat, roll){
+  if(cat==='weapon'){
+    const score = (roll.atk||0)*5 + (roll.crit||0)*2 + (roll.ls||0)*3;
+    return clamp(Math.round(score), 1, 99);
+  }
+  const score = (roll.def||0)*4 + (roll.hp||0)*0.6 + (roll.en||0)*0.7 + (roll.atk||0)*4 + (roll.crit||0)*2 + (roll.ls||0)*3;
+  return clamp(Math.round(score), 1, 99);
+}
+
+function makeRangesFromTemplate(cat, t){
+  const r = {};
+  const keys = (cat==='weapon') ? ['atk','crit','ls'] : ['atk','def','hp','en','crit','ls'];
+  for(const k of keys){
+    const v = Number(t[k]||0);
+    const rarity = t.rarity || '普通';
+    const spreadLo = (rarity==='傳說')?3:(rarity==='菁英')?2:1;
+    const spreadHi = (rarity==='傳說')?4:(rarity==='菁英')?3:2;
+    const mn = (t[k+'_min']!=null) ? Number(t[k+'_min']) : v - spreadLo;
+    const mx = (t[k+'_max']!=null) ? Number(t[k+'_max']) : v + spreadHi;
+    r[k+'_min'] = Math.max(0, Math.floor(mn));
+    r[k+'_max'] = Math.max(r[k+'_min'], Math.floor(mx));
+  }
+  return r;
+}
+
+function rollInstance(cat, template){
+  const ranges = makeRangesFromTemplate(cat, template);
+  const roll = {};
+  if(cat==='weapon'){
+    roll.atk  = randInt(ranges.atk_min, ranges.atk_max);
+    roll.crit = randInt(ranges.crit_min, ranges.crit_max);
+    roll.ls   = randInt(ranges.ls_min, ranges.ls_max);
+  } else {
+    roll.atk  = randInt(ranges.atk_min, ranges.atk_max);
+    roll.def  = randInt(ranges.def_min, ranges.def_max);
+    roll.hp   = randInt(ranges.hp_min, ranges.hp_max);
+    roll.en   = randInt(ranges.en_min, ranges.en_max);
+    roll.crit = randInt(ranges.crit_min, ranges.crit_max);
+    roll.ls   = randInt(ranges.ls_min, ranges.ls_max);
+  }
+  const rating = calcRating(cat, roll);
+  return {roll, rating};
+}
+
+function instStatsText(cat, inst, tpl){
+  const r = (inst && inst.roll) ? inst.roll : {};
+  if(cat==='weapon'){
+    return `攻擊 +${(r.atk ?? tpl.atk)} · 暴擊 +${(r.crit ?? (tpl.crit||0))}% · 吸血 +${(r.ls ?? (tpl.ls||0))}%`;
+  }
+  if(cat==='equipment'){
+    return `${partLabel(tpl.slot)} · 攻 +${(r.atk ?? (tpl.atk||0))} · 防 +${(r.def ?? (tpl.def||0))} · HP +${(r.hp ?? (tpl.hp||0))} · EN +${(r.en ?? (tpl.en||0))} · 暴擊 +${(r.crit ?? (tpl.crit||0))}% · 吸血 +${(r.ls ?? (tpl.ls||0))}%`;
+  }
+  return '';
+}
+
+function compareArrow(a,b){
+  if(a==null || b==null) return '—';
+  if(a>b) return '⬆️';
+  if(a<b) return '⬇️';
+  return '↔️';
+}
+
+function getEquippedRating(slot){
+  const eq=getEquipped(slot);
+  return eq?.inv?.rating ?? null;
+}
+
+function bestCompareForWeapon(inst){
+  const r = inst?.rating ?? null;
+  return `R:${compareArrow(r, getEquippedRating('weaponR'))} L:${compareArrow(r, getEquippedRating('weaponL'))}`;
+}
+
+function statusTagsHtml(side){
+  const arr = (S.battleStatus && S.battleStatus[side]) ? S.battleStatus[side] : [];
+  if(!arr.length) return '<span class="muted">（無）</span>';
+  return arr.map(s=>{
+    const cls = (side==='enemy') ? 'stTag stBad' : 'stTag stGood';
+    return `<span class="${cls}">${escapeHtml(s.label)} · ${s.turns}</span>`;
+  }).join('');
+}
+
+function addStatus(side, st){
+  if(!S.battleStatus) S.battleStatus={player:[],enemy:[]};
+  S.battleStatus[side].push(st);
+}
+
+function tickStatus(side){
+  if(!S.battleStatus) S.battleStatus={player:[],enemy:[]};
+  const arr=S.battleStatus[side];
+  let dmg=0, mpLoss=0, guard=0;
+  for(const s of arr){
+    if(s.type==='bleed') dmg += s.value;
+    if(s.type==='overheat') mpLoss += s.value;
+    if(s.type==='guard') guard = Math.max(guard, s.value);
+    s.turns -= 1;
+  }
+  S.battleStatus[side] = arr.filter(s=>s.turns>0);
+  return {dmg, mpLoss, guard};
+}
+
+function stopAuto(){
+  S.battleAuto=false;
+  if(_autoTimer){ clearTimeout(_autoTimer); _autoTimer=null; }
+}
+
+function autoStep(){
+  if(!S.battle.active) return;
+  if(!S.battleAuto) return;
+  if(S.en >= 6) castSkill('power');
+  else playerAttack(false);
+  if(S.battle.active && S.battleAuto){
+    _autoTimer=setTimeout(autoStep, 450);
+  }
+}
+
+function castSkill(id){
+  const b=S.battle; if(!b.active) return;
+  const sk = SKILLS.find(x=>x.id===id); if(!sk) return;
+  if(S.en < sk.cost){ blog('MP 不足。'); log('MP 不足。'); render(); return; }
+  S.en -= sk.cost;
+
+  const st=stats();
+
+  if(id==='guard'){
+    addStatus('player', {type:'guard', label:'防禦+3', turns:2, value:3});
+    blog('施放：防禦姿態（防禦+3，2回合）');
+    log('施放：防禦姿態（防禦+3，2回合）');
+    enemyTurn();
+    return;
+  }
+
+  const mul = (id==='over') ? 2.2 : 1.6;
+  let dmgBase = Math.floor(st.atk * mul) + rnd(0,3);
+  dmgBase = Math.floor(dmgBase * (1 + (st.bonus.skillDmgPct||0)/100));
+  let dmg = Math.max(1, dmgBase - Math.floor(b.enemy.def*0.6));
+
+  const isCrit = pct(st.crit/100);
+  if(isCrit){
+    const cm = 1.6 + (st.bonus.critDmgPct||0)/100;
+    dmg = Math.floor(dmg*cm);
+  }
+
+  b.enemyHp = Math.max(0, b.enemyHp - dmg);
+  blog(`技能「${sk.name}」：-${dmg} HP${isCrit?'（暴擊）':''}`);
+  log(`技能「${sk.name}」：-${dmg} HP${isCrit?'（暴擊）':''}`);
+
+  if(id==='power' && pct(0.30)){
+    addStatus('enemy', {type:'bleed', label:'流血', turns:2, value:3});
+    blog('敵方受到「流血」(2回合)');
+    log('敵方受到「流血」(2回合)');
+  }
+  if(id==='over'){
+    addStatus('player', {type:'overheat', label:'過熱', turns:2, value:3});
+    blog('自身進入「過熱」(2回合，每回合-3MP)');
+    log('自身進入「過熱」(2回合，每回合-3MP)');
+  }
+
+  applyTurnRegen();
+  if(b.enemyHp<=0) endBattle(true);
+  else enemyTurn();
+}
+
+// Override computeBonuses to use rolled stats if present
+function computeBonuses(){
+  const b={ hp:0,en:0,atk:0,def:0,crit:0,ls:0,
+    regenHp:0,regenEn:0,dmgReduce:0,flee:0,skillCostReduce:0,skillDmgPct:0,critDmgPct:0
+  };
+  const slots=['weaponR','weaponL','head','body','arms','legs','booster','core'];
+  for(const s of slots){
+    const eq=getEquipped(s);
+    if(!eq) continue;
+    const d=eq.data;
+    const r=eq.inv.roll || {};
+    b.atk += (r.atk ?? d.atk ?? 0);
+    b.def += (r.def ?? d.def ?? 0);
+    b.hp  += (r.hp  ?? d.hp  ?? 0);
+    b.en  += (r.en  ?? d.en  ?? 0);
+    b.crit += (r.crit ?? d.crit ?? 0);
+    b.ls += (r.ls ?? d.ls ?? 0);
+  }
+  const counts=computeSetCounts();
+  for(const [setId,cnt] of Object.entries(counts)){
+    const sb=DB.set_bonus[setId];
+    if(!sb) continue;
+    if(cnt>=2) for(const [k,v] of Object.entries(sb.bonuses['2'])) b[k]+=v;
+    if(cnt>=4) for(const [k,v] of Object.entries(sb.bonuses['4'])) b[k]+=v;
+  }
+  for(const bf of S.buffs){
+    if(bf.type==='atk') b.atk+=bf.value;
+    if(bf.type==='def') b.def+=bf.value;
+    if(bf.type==='crit') b.crit+=bf.value;
+  }
+  return b;
+}
+
+// Override rollDrops: return rolled instances (not pushed yet)
+function rollDrops(enemy){
+  const res=[];
+  const t=enemy.drops||{};
+  function addInst(cat, chosen){
+    if(cat==='weapon' || cat==='equipment'){
+      const inst = rollInstance(cat, chosen);
+      res.push({uid:safeId('inv'), cat, id:chosen.id, roll: inst.roll, rating: inst.rating});
+    } else {
+      res.push({uid:safeId('inv'), cat, id:chosen.id});
+    }
+  }
+  function roll(cat, chance, pool){
+    if(!pct(chance)) return;
+    const rarity=weightedPickRarity();
+    const candidates=pool.filter(x=>x.rarity===rarity);
+    const chosen=pick(candidates.length?candidates:pool);
+    addInst(cat, chosen);
+  }
+  roll('weapon', t.weapon||0, DB.weapons);
+  roll('equipment', t.equipment||0, DB.equipment);
+  if(pct(t.consumable||0)) res.push({uid:safeId('inv'), cat:'consumable', id:pick(DB.consumables).id});
+  return res;
+}
+
+// Override shop reroll to include unknown stats
+function rerollShop(){
+  const floor=S.area.floor;
+  const base=DB.drop_and_shop.shop_base_by_floor[String(floor)] || DB.drop_and_shop.shop_base_by_floor['1'];
+  const n=base.count||6;
+  const items=[];
+  for(let i=0;i<n;i++){
+    const cat=weightedPick(base.categories);
+    const pool = (cat==='weapon') ? DB.weapons : (cat==='equipment') ? DB.equipment : DB.consumables;
+    const rarity = weightedPick(base.rarity_weights);
+    const candidates = pool.filter(x=>x.rarity===rarity);
+    const chosen = pick(candidates.length?candidates:pool);
+    const price = Math.max(5, Math.floor((chosen.price||10) * (1 + (floor-1)*0.08)));
+    items.push({uid:safeId('shop'), cat, id:chosen.id, price, revealed:false});
+  }
+  S.shop={items};
+  render();
+}
+
+// Override buyFromShop: roll on buy for weapon/equipment
+function buyFromShop(uid){
+  const it=S.shop.items.find(x=>x.uid===uid);
+  if(!it) return;
+  if(S.gold < it.price) return;
+  const tpl=getItemById(it.cat,it.id);
+  S.gold -= it.price;
+
+  if(it.cat==='weapon' || it.cat==='equipment'){
+    const inst = rollInstance(it.cat, tpl);
+    S.inventory.push({uid:safeId('inv'), cat:it.cat, id:it.id, roll: inst.roll, rating: inst.rating});
+  } else {
+    S.inventory.push({uid:safeId('inv'), cat:it.cat, id:it.id});
+  }
+
+  S.shop.items=S.shop.items.filter(x=>x.uid!==uid);
+  log(`購買：${tpl.name} (-${it.price} 金)`);
+  render();
+}
+
+// Override renderShop: hide stats until bought (revealed flag not used because we roll on buy)
+function renderShop(){
+  const box=$('#shopList');
+  if(!box) return;
+  if(!S.shop?.items?.length){
+    box.innerHTML = `<div class="muted">（商店暫無商品）</div>`;
+    return;
+  }
+  box.innerHTML = S.shop.items.map(it=>{
+    const d=getItemById(it.cat,it.id);
+    const setBadge = d.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
+    const disabled = (S.gold < it.price) ? 'disabled' : '';
+    const info = `<span class="muted">（購買後才會揭示隨機數值）</span>`;
+    return `
+      <div class="card">
+        <div class="row">
+          <div class="title">${escapeHtml(d.name)} ${rarityBadge(d.rarity)} ${setBadge}</div>
+          <button class="btn btn-primary" ${disabled} onclick="buyFromShop('${it.uid}')">購買</button>
+        </div>
+        <div class="desc">${info}<br><span class="badge">評分：??</span> <span class="badge">價格：${it.price} 金</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Override renderInventory to show rating + compare arrows + rolled stats
+function renderInventory(){
+  const box=$('#invList');
+  if(!box) return;
+
+  const items=S.inventory.slice().sort((a,b)=>{
+    const A=getItemById(a.cat,a.id), B=getItemById(b.cat,b.id);
+    const ra=rankRarity(A.rarity), rb=rankRarity(B.rarity);
+    if(ra!==rb) return rb-ra;
+    return (A.name||'').localeCompare(B.name||'');
+  });
+
+  box.innerHTML = items.map(it=>{
+    const d=getItemById(it.cat,it.id);
+    const eq=isEquipped(it.uid);
+    const eqBadge = eq ? `<span class="badge">已裝備</span>` : '';
+    const setBadge = d.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
+    const rating = it.rating || (it.cat==='consumable' ? '' : '1');
+
+    let cmp='';
+    if(it.cat==='weapon'){
+      cmp = bestCompareForWeapon(it);
+    } else if(it.cat==='equipment'){
+      const slot=d.slot;
+      cmp = `${slotName(slot)}:${compareArrow(it.rating, getEquippedRating(slot))}`;
+    }
+
+    const desc = (it.cat==='consumable')
+      ? itemDesc(it.cat,d)
+      : `${instStatsText(it.cat,it,d)}<br>被動：${escapeHtml(d.passive||'—')}<br><span class="badge">比對：${cmp}</span>`;
+
+    return `
+      <div class="card">
+        <div class="row">
+          <div class="title">${escapeHtml(d.name)} ${rarityBadge(d.rarity)} ${it.cat!=='consumable' ? `<span class="badge">評分：${rating}</span>`:''} ${setBadge} ${eqBadge}</div>
+          <div class="row" style="gap:8px;">
+            ${it.cat!=='consumable' ? `<button class="btn" onclick="equip('${it.uid}')">裝備</button>` : ''}
+            <button class="btn" onclick="sell('${it.uid}')">出售</button>
+          </div>
+        </div>
+        <div class="desc">${desc}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Ensure reset() gives rolled starter gear
+const _resetOld = reset;
+reset = function(){
+  _resetOld();
+  // Re-roll all existing weapon/equipment in inventory lacking roll
+  S.inventory = S.inventory.map(it=>{
+    if((it.cat==='weapon' || it.cat==='equipment') && !it.roll){
+      const tpl=getItemById(it.cat,it.id);
+      const inst=rollInstance(it.cat, tpl);
+      return {...it, roll: inst.roll, rating: inst.rating};
+    }
+    return it;
+  });
+  render();
+};
+
+// Override startBattle to init turn/status/auto
+function startBattle(){
+  const enemy=structuredClone(pickEnemy());
+  S.battle = { active:true, enemy, enemyHp:enemy.hp, enemyHpMax:enemy.hp, firstHitTaken:true };
+  S.battleLog = [];
+  S.battleTurn = 1;
+  S.battleStatus = { player: [], enemy: [] };
+
+  const rew = $('#bmRewards'); if(rew){ rew.style.display='none'; }
+  blog(`遇敵：${enemy.name}（${enemy.role}）`);
+  log(`遇敵：${enemy.name}（${enemy.role}）`);
+
+  const dlg = $('#battleModal');
+  if(dlg && !dlg.open) dlg.showModal();
+
+  render();
+  if(S.battleAuto){
+    if(_autoTimer) clearTimeout(_autoTimer);
+    _autoTimer=setTimeout(autoStep, 350);
+  }
+}
+
+// Override enemyTurn: apply status ticks, guard buff, turn counter
+function enemyTurn(){
+  const b=S.battle; if(!b.active) return;
+
+  // status ticks (start of enemy turn)
+  const ed = tickStatus('enemy');
+  if(ed.dmg>0){
+    b.enemyHp = Math.max(0, b.enemyHp - ed.dmg);
+    blog(`敵方流血：-${ed.dmg} HP`);
+    log(`敵方流血：-${ed.dmg} HP`);
+    if(b.enemyHp<=0){ endBattle(true); return; }
+  }
+  const pd = tickStatus('player');
+  if(pd.mpLoss>0){
+    S.en = Math.max(0, S.en - pd.mpLoss);
+    blog(`我方過熱：-${pd.mpLoss} MP`);
+    log(`我方過熱：-${pd.mpLoss} MP`);
+  }
+
+  S.battleTurn = (S.battleTurn||1) + 1;
+
+  const st=stats();
+  const guard = pd.guard || 0;
+
+  let dmgBase = b.enemy.atk + rnd(0,2);
+  // crit
+  const isCrit = pct(0.12);
+  if(isCrit) dmgBase = Math.floor(dmgBase*1.5);
+  let dmg = Math.max(1, dmgBase - Math.floor((st.def+guard)*0.65));
+  // damage reduce bonuses
+  const dr = (st.bonus.dmgReduce||0)/100;
+  dmg = Math.max(1, Math.floor(dmg*(1-dr)));
+
+  S.hp = Math.max(0, S.hp - dmg);
+  blog(`${b.enemy.name} 攻擊：-${dmg} HP${isCrit?'（暴擊）':''}`);
+  log(`${b.enemy.name} 攻擊：-${dmg} HP${isCrit?'（暴擊）':''}`);
+
+  applyTurnRegen();
+
+  if(S.hp<=0){
+    blog('你被擊敗了，回城修復。');
+    log('你被擊敗了，回城修復。');
+    S.hp = Math.floor(st.hpMax*0.5);
+    S.en = Math.floor(st.enMax*0.5);
+    stopAuto();
+    endBattle(false);
+    return;
+  }
+
+  render();
+
+  // continue auto
+  if(S.battle.active && S.battleAuto){
+    if(_autoTimer) clearTimeout(_autoTimer);
+    _autoTimer=setTimeout(autoStep, 450);
+  }
+}
+
+// Override renderBattleModal: show turn, statuses, skills, log, rewards visibility
+function renderBattleModal(){
+  const dlg = $('#battleModal'); if(!dlg) return;
+  const b=S.battle;
+  const st=stats();
+
+  const tEl=$('#bmTurn'); if(tEl) tEl.textContent = `回合 ${S.battleTurn||1}`;
+
+  // player
+  $('#bmPlayerHp').textContent = `${S.hp} / ${st.hpMax}`;
+  $('#bmPlayerMp').textContent = `${S.en} / ${st.enMax}`;
+  $('#bmPlayerAtk').textContent = st.atk;
+  $('#bmPlayerDef').textContent = st.def;
+  setBar('#bmPlayerHpBar', S.hp, st.hpMax);
+  setBar('#bmPlayerMpBar', S.en, st.enMax);
+
+  const ps=$('#bmPlayerStatus'); if(ps) ps.innerHTML = statusTagsHtml('player');
+  const es=$('#bmEnemyStatus'); if(es) es.innerHTML = statusTagsHtml('enemy');
+
+  if(!b.active){
+    $('#bmEnemyName').textContent='—';
+    $('#bmEnemyHp').textContent='—';
+    $('#bmEnemyAtk').textContent='—';
+    $('#bmEnemyDef').textContent='—';
+    setBar('#bmEnemyHpBar', 0, 1);
+    $('#bmHint').textContent = '未在戰鬥中。';
+  } else {
+    $('#bmEnemyName').textContent = `${b.enemy.name} · ${b.enemy.role}`;
+    $('#bmEnemyHp').textContent = `${b.enemyHp} / ${b.enemyHpMax}`;
+    $('#bmEnemyAtk').textContent = b.enemy.atk;
+    $('#bmEnemyDef').textContent = b.enemy.def;
+    setBar('#bmEnemyHpBar', b.enemyHp, b.enemyHpMax);
+    $('#bmHint').textContent = '選擇普攻或施放技能。';
+  }
+
+  // log
+  const box=$('#bmLogBox');
+  if(box){
+    const lines = S.battleLog.slice(0,80).reverse();
+    box.innerHTML = lines.length ? lines.map(s=>`<div class="line">${escapeHtml(s)}</div>`).join('') : `<div class="line muted">（尚無戰鬥紀錄）</div>`;
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // skills
+  const sk=$('#bmSkills');
+  if(sk){
+    sk.innerHTML = SKILLS.map(s=>{
+      const dis = (!b.active || S.en < s.cost) ? 'disabled' : '';
+      return `<div class="skillCard">
+        <div class="skillTop">
+          <div class="skillName">${escapeHtml(s.name)}</div>
+          <div class="skillCost">MP ${s.cost}</div>
+        </div>
+        <div class="skillDesc">${escapeHtml(s.desc)}</div>
+        <div class="skillBtnRow">
+          <button class="btn btn-primary" ${dis} onclick="castSkill('${s.id}')">施放</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // auto toggle sync
+  const at=$('#bmAutoToggle'); if(at) at.checked = !!S.battleAuto;
+}
+
+// Override render() to include battle modal render
+const _renderOld = render;
+render = function(){
+  _renderOld();
+  renderBattleModal();
+};
+
+// Override endBattle to show loot cards + continue/leave
+function endBattle(victory){
+  const b=S.battle;
+  if(!b.active) return;
+
+  if(_autoTimer){ clearTimeout(_autoTimer); _autoTimer=null; }
+
+  const dlg = $('#battleModal');
+  const rewBox = $('#bmRewards');
+  const meta = $('#bmRewardsMeta');
+  const loot = $('#bmLoot');
+
+  if(victory){
+    const e=b.enemy;
+    const g = e.gold + rnd(0, Math.max(3, Math.floor(e.gold*0.25)));
+    S.gold += g;
+    gainXP(e.xp);
+
+    blog(`勝利！+${e.xp} EXP、+${g} 金`);
+    log(`勝利！+${e.xp} EXP、+${g} 金`);
+
+    let extra = '—';
+    if(e.role==='Boss'){
+      if((S.area.unlocked||1) < 10 && S.area.floor===S.area.unlocked){
+        S.area.unlocked += 1;
+        extra = `${S.area.unlocked}F`;
+        blog(`Boss 擊破！已解鎖 ${S.area.unlocked}F。`);
+        log(`Boss 擊破！已解鎖 ${S.area.unlocked}F。`);
+      }
+    }
+
+    const drops=rollDrops(e);
+    drops.forEach(it=>S.inventory.push(it));
+
+    if(rewBox) rewBox.style.display='block';
+    if(meta){
+      meta.innerHTML = `<div>EXP：+${e.xp}</div><div>金幣：+${g}</div><div>解鎖：${escapeHtml(extra)}</div><div>掉落數：${drops.length}</div>`;
+    }
+    if(loot){
+      loot.innerHTML = drops.length ? drops.map(it=>{
+        const tpl=getItemById(it.cat,it.id);
+        const rating = it.rating || 1;
+        const sub = (it.cat==='consumable') ? escapeHtml(tpl.desc||'') : instStatsText(it.cat,it,tpl);
+        return `<div class="lootCard">
+          <div class="lootName">${escapeHtml(tpl.name)} ${rarityBadge(tpl.rarity||'')}</div>
+          <div class="lootSub">評分：${rating}</div>
+          <div class="lootSub">${sub}</div>
+        </div>`;
+      }).join('') : `<div class="muted">（無掉落）</div>`;
+    }
+  } else {
+    if(rewBox) rewBox.style.display='block';
+    if(meta) meta.innerHTML = `<div>EXP：0</div><div>金幣：0</div><div>解鎖：—</div><div>掉落數：0</div>`;
+    if(loot) loot.innerHTML = `<div class="muted">（無）</div>`;
+  }
+
+  S.battle.active=false;
+  tickBuffs(1);
+  render();
+
+  if(dlg && !dlg.open) dlg.showModal();
+}
+
+// Bind modal controls after boot (boot already exists; we attach here)
+document.addEventListener('DOMContentLoaded', ()=>{
+  const bmA = $('#bmAttack'); if(bmA) bmA.onclick = ()=>playerAttack(false);
+  const bmF = $('#bmFlee');   if(bmF) bmF.onclick = ()=>$('#btnFlee')?.click();
+
+  const dlg = $('#battleModal');
+  const bmClose = $('#bmClose');
+  if(dlg){
+    dlg.addEventListener('cancel', (e)=>{ if(S.battle.active) e.preventDefault(); });
+  }
+  if(bmClose && dlg){
+    bmClose.onclick = ()=>{
+      if(S.battle.active){
+        blog('（提示）戰鬥進行中，無法關閉視窗。');
+        log('戰鬥進行中，無法關閉戰鬥視窗。');
+        render();
+        return;
+      }
+      dlg.close();
+    };
+  }
+
+  const btnC = $('#bmContinue');
+  if(btnC) btnC.onclick = ()=>{
+    if(dlg) dlg.close();
+    explore();
+  };
+  const btnL = $('#bmLeave');
+  if(btnL) btnL.onclick = ()=>{
+    if(dlg) dlg.close();
+    stopAuto();
+    render();
+  };
+
+  const auto = $('#bmAutoToggle');
+  if(auto){
+    auto.onchange = ()=>{
+      S.battleAuto = !!auto.checked;
+      if(S.battleAuto){
+        blog('自動戰鬥：ON'); log('自動戰鬥：ON');
+        if(S.battle.active){
+          if(_autoTimer) clearTimeout(_autoTimer);
+          _autoTimer=setTimeout(autoStep, 350);
+        }
+      } else {
+        blog('自動戰鬥：OFF'); log('自動戰鬥：OFF');
+        if(_autoTimer){ clearTimeout(_autoTimer); _autoTimer=null; }
+      }
+      render();
+    };
+  }
+});

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>機甲：廢土升等掉寶 (V0.1.3)</title>
+  <title>機甲：廢土升等掉寶 (V0.1.4)</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.1.3" />
+  <link rel="stylesheet" href="styles.css?v=0.1.4" />
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +13,7 @@
       <div class="logo">🤖</div>
       <div class="titles">
         <div class="name">機甲：廢土升等掉寶</div>
-        <div class="ver">V0.1.3 · GitHub Pages 可直接跑</div>
+        <div class="ver">V0.1.4 · GitHub Pages 可直接跑</div>
       </div>
     </div>
     <div class="top-actions">
@@ -194,12 +194,19 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=0.1.3"></script>
+  <script src="main.js?v=0.1.4"></script>
 
+  
   <dialog id="battleModal" class="battleModal">
     <div class="bmHeader">
-      <div class="bmTitle">戰鬥</div>
-      <button class="iconbtn bmClose" id="bmClose" title="關閉" aria-label="關閉">✕</button>
+      <div class="bmTitle">戰鬥 <span class="badge" id="bmTurn">回合 1</span></div>
+      <div class="bmHeaderRight">
+        <label class="bmAuto">
+          <input type="checkbox" id="bmAutoToggle">
+          <span>自動戰鬥</span>
+        </label>
+        <button class="iconbtn bmClose" id="bmClose" title="關閉" aria-label="關閉">✕</button>
+      </div>
     </div>
 
     <div class="bmGrid">
@@ -210,6 +217,7 @@
         <div class="bmRow"><span>攻擊</span><span id="bmEnemyAtk">—</span></div>
         <div class="bmRow"><span>防禦</span><span id="bmEnemyDef">—</span></div>
         <div class="bmBar"><div id="bmEnemyHpBar" class="fill"></div></div>
+        <div class="bmStatus" id="bmEnemyStatus"></div>
       </div>
 
       <div class="bmCard">
@@ -221,6 +229,7 @@
         <div class="bmRow"><span>防禦</span><span id="bmPlayerDef">—</span></div>
         <div class="bmBar"><div id="bmPlayerHpBar" class="fill"></div></div>
         <div class="bmBar"><div id="bmPlayerMpBar" class="fill"></div></div>
+        <div class="bmStatus" id="bmPlayerStatus"></div>
       </div>
 
       <div class="bmCard bmLog">
@@ -229,17 +238,29 @@
       </div>
 
       <div class="bmCard bmActions">
-        <div class="bmCardTitle">操作</div>
-        <div class="bmBtns">
-          <button id="bmAttack" class="btn btn-primary">攻擊</button>
-          <button id="bmSkill" class="btn btn-primary">技能</button>
+        <div class="bmCardTitle">技能列表</div>
+        <div class="bmSkills" id="bmSkills"></div>
+
+        <div class="bmBtns" style="margin-top:10px;">
+          <button id="bmAttack" class="btn btn-primary">普攻</button>
           <button id="bmFlee" class="btn">撤退</button>
         </div>
+
         <div id="bmHint" class="muted" style="margin-top:10px;">—</div>
-        <div id="bmRewards" class="bmRewards" style="display:none;"></div>
+
+        <div id="bmRewards" class="bmRewards" style="display:none;">
+          <div class="bmRewardsTitle">戰鬥結算</div>
+          <div class="bmRewardsMeta" id="bmRewardsMeta"></div>
+          <div class="bmLoot" id="bmLoot"></div>
+          <div class="bmEndBtns">
+            <button id="bmContinue" class="btn btn-primary">繼續探索</button>
+            <button id="bmLeave" class="btn">離開</button>
+          </div>
+        </div>
       </div>
     </div>
   </dialog>
+
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* V0.1.3 */
+/* V0.1.4 */
 :root{
   --bg:#0b0f14;
   --card:#101823;
@@ -268,4 +268,32 @@ h3{margin:0; font-size:14px}
   border-radius:12px;
   border:1px dashed rgba(255,255,255,.18);
   background: rgba(255,255,255,.04);
+}
+
+
+/* RPG battle enhancements */
+.bmHeaderRight{display:flex; align-items:center; gap:10px;}
+.bmAuto{display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid rgba(255,255,255,.12); border-radius:12px; background: rgba(255,255,255,.03); font-size:12px;}
+.bmAuto input{accent-color:#7be3ff;}
+.bmStatus{margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;}
+.stTag{font-size:11px; padding:3px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04);}
+.stBad{border-color: rgba(255,120,120,.25); background: rgba(255,80,80,.08);}
+.stGood{border-color: rgba(120,255,160,.22); background: rgba(80,255,140,.08);}
+.bmSkills{display:grid; grid-template-columns:1fr; gap:8px;}
+.skillCard{border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); border-radius:14px; padding:10px;}
+.skillTop{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;}
+.skillName{font-weight:900;}
+.skillCost{font-size:12px; opacity:.9;}
+.skillDesc{font-size:12px; opacity:.85; line-height:1.4;}
+.skillBtnRow{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;}
+.bmRewardsTitle{font-weight:900; margin-bottom:6px;}
+.bmRewardsMeta{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;}
+.bmLoot{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:10px;}
+.lootCard{border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); border-radius:14px; padding:10px;}
+.lootName{font-weight:900; margin-bottom:4px;}
+.lootSub{font-size:12px; opacity:.85; line-height:1.35;}
+.bmEndBtns{display:flex; gap:8px; flex-wrap:wrap;}
+@media (max-width:740px){
+  .bmLoot{grid-template-columns:1fr;}
+  .bmRewardsMeta{grid-template-columns:1fr;}
 }
