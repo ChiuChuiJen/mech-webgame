@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.7';
+const VERSION = '0.1.8';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -1745,3 +1745,79 @@ try{
 
 
 try{ if(DB && !DB.drop_and_shop && DB.drop_shop) DB.drop_and_shop=DB.drop_shop; }catch(e){}
+
+
+/* ===== V0.1.8 HOTFIX: eliminate DB key conflicts + safe rankRarity binding ===== */
+
+// rankRarity is referenced by patched inventory sort; ensure it exists without conflicting with existing consts.
+if(typeof rankRarity === 'undefined'){
+  // use existing rarityRank() if present, otherwise fall back to 0.
+  var rankRarity = function(r){
+    try{ return (typeof rarityRank==='function') ? rarityRank(r) : 0; }catch(e){ return 0; }
+  };
+}
+
+// unify drop/shop db key (supports both DB.drop_and_shop and DB.drop_shop)
+function getDropShop(){
+  return DB.drop_and_shop || DB.drop_shop || null;
+}
+
+// Override rarity weight picker to support both keys + missing data
+function weightedPickRarity(){
+  const ds = getDropShop();
+  const w = ds?.rarity_weight || ds?.rarityWeight || null;
+  if(!w) return '普通';
+  const entries=Object.entries(w);
+  const total=entries.reduce((s,kv)=>s+Number(kv[1]||0),0);
+  if(total<=0) return entries[0]?.[0] || '普通';
+  let r=Math.random()*total;
+  for(const [k,v] of entries){ r-=Number(v||0); if(r<=0) return k; }
+  return entries[0][0];
+}
+
+// Override rerollShop to never crash when data key missing; accept both legacy/new formats
+function rerollShop(){
+  const ds = getDropShop();
+  const floor = String(S.area.floor||1);
+  const shopMap = ds?.shop_base_by_floor || ds?.shopBaseByFloor || null;
+  const base = shopMap?.[floor] || shopMap?.['1'] || null;
+
+  if(!base){
+    S.shop={items:[]};
+    render();
+    return;
+  }
+
+  // legacy format uses pools
+  if(base.weapons && base.equipment && base.consumables){
+    function makeOffer(cat,id){
+      const d=getItemById(cat,id);
+      const price=(d.price||20)+rnd(0, Math.max(3, Math.floor((d.price||20)*0.15)));
+      return {uid:safeId('shop'), cat, id, price, revealed:false};
+    }
+    const items=[];
+    items.push(makeOffer('weapon', pick(base.weapons)));
+    items.push(makeOffer('weapon', pick(base.weapons)));
+    for(let i=0;i<3;i++) items.push(makeOffer('equipment', pick(base.equipment)));
+    items.push(makeOffer('consumable', pick(base.consumables)));
+    items.push(makeOffer('consumable', pick(base.consumables)));
+    S.shop={items};
+    render();
+    return;
+  }
+
+  // newer weighted format
+  const n=base.count||6;
+  const items=[];
+  for(let i=0;i<n;i++){
+    const cat=weightedPick(base.categories);
+    const pool = (cat==='weapon') ? DB.weapons : (cat==='equipment') ? DB.equipment : DB.consumables;
+    const rarity = weightedPick(base.rarity_weights);
+    const candidates = pool.filter(x=>x.rarity===rarity);
+    const chosen = pick(candidates.length?candidates:pool);
+    const price = Math.max(5, Math.floor((chosen.price||10) * (1 + (Number(floor)-1)*0.08)));
+    items.push({uid:safeId('shop'), cat, id:chosen.id, price, revealed:false});
+  }
+  S.shop={items};
+  render();
+}
