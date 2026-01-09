@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.3';
+const VERSION = '0.2.4';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2135,7 +2135,7 @@ function ensureSkillState(){
     S.skillSlots = [null,null,null]; // 3 slots
   }
 }
-ensureSkillState();
+// ensureSkillState() deferred until after state is available
 
 // Render skill slots in equipment UI
 function renderSkillSlotsUI(){
@@ -2412,18 +2412,18 @@ if(typeof _renderV022Wrapped === 'undefined'){
   var _renderV022Wrapped = true;
   const _renderOld = render;
   render = function(){
-    ensureSkillState();
-    _renderOld();
-    renderSkillSlotsUI();
-  };
+  if(S) ensureSkillState();
+  _renderOld();
+  if(S) renderSkillSlotsUI();
+};
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
-  ensureSkillState();
+  if(S) ensureSkillState();
   bindSkillSlotButtons();
-  renderSkillSlotsUI();
-  // initial skills pane if opened
-  renderSkillsPane();
+  if(S) renderSkillSlotsUI();
+  // initial skills pane
+  try{ renderSkillsPane(); }catch(e){}
 });
 
 
@@ -2502,12 +2502,13 @@ if(typeof _renderV023Wrapped === 'undefined'){
   var _renderV023Wrapped = true;
   const _renderPrev = render;
   render = function(){
-    ensureInvFilter();
-    ensureAutoNext();
-    _renderPrev();
-    bindInvCats();
-    setNextModeUI();
-  };
+  if(!S){ try{ _renderPrev(); }catch(e){} return; }
+  ensureInvFilter();
+  ensureAutoNext();
+  _renderPrev();
+  bindInvCats();
+  setNextModeUI();
+};
 }
 
 // Patch renderInventory to apply filter (works with our overridden inventory renderer in V0.2.2)
