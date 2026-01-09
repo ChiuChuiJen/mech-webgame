@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>機甲：廢土升等掉寶 (V0.2.0)</title>
+  <title>機甲：廢土升等掉寶 (V0.2.1)</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=0.2.0" />
+  <link rel="stylesheet" href="styles.css?v=0.2.1" />
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +13,7 @@
       <div class="logo">🤖</div>
       <div class="titles">
         <div class="name">機甲：廢土升等掉寶</div>
-        <div class="ver">V0.2.0 · GitHub Pages 可直接跑</div>
+        <div class="ver">V0.2.1 · GitHub Pages 可直接跑</div>
       </div>
     </div>
     <div class="top-actions">
@@ -194,7 +194,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=0.2.0"></script>
+  <script src="main.js?v=0.2.1"></script>
 
   
   <dialog id="battleModal" class="battleModal">
@@ -262,5 +262,32 @@
   </dialog>
 
 
+
+  <dialog id="weaponHandModal" class="miniModal">
+    <div class="mmHeader">
+      <div class="mmTitle">選擇武器裝備位置</div>
+      <button class="iconbtn" id="whClose" aria-label="關閉">✕</button>
+    </div>
+    <div class="mmBody">
+      <div class="muted" id="whName">—</div>
+      <div class="mmBtns">
+        <button class="btn btn-primary" id="whRight">裝備右手</button>
+        <button class="btn btn-primary" id="whLeft">裝備左手</button>
+      </div>
+    </div>
+  </dialog>
+
+
+  <dialog id="changelogModal" class="miniModal">
+    <div class="mmHeader">
+      <div class="mmTitle">版本更新歷程</div>
+      <button class="iconbtn" id="clClose" aria-label="關閉">✕</button>
+    </div>
+    <div class="mmBody">
+      <div id="clAll" class="clList"></div>
+    </div>
+  </dialog>
+
+<div id="clPreview"></div>
 </body>
 </html>

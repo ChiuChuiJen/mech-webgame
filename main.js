@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -393,7 +393,7 @@ function renderInventory(){
     const d=getItemById(it.cat,it.id);
     const eq=isEquipped(it.uid);
     const setBadge = d.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
-    const eqBadge = eq ? `<span class="badge">已裝備</span>` : '';
+    const eqBadge = eq ? `<span class=\"badge equipped\">已裝備</span>` : '';
     const sellPrice = Math.max(1, Math.floor((d.price||10)*0.55));
     let act='';
     if(it.cat==='weapon'){
@@ -1416,7 +1416,7 @@ function renderInventory(){
   box.innerHTML = items.map(it=>{
     const d=getItemById(it.cat,it.id);
     const eq=isEquipped(it.uid);
-    const eqBadge = eq ? `<span class="badge">已裝備</span>` : '';
+    const eqBadge = eq ? `<span class=\"badge equipped\">已裝備</span>` : '';
     const setBadge = d.set ? `<span class="badge">套裝：${escapeHtml(DB.set_bonus[d.set]?.name||d.set)}</span>` : '';
     const rating = it.rating || (it.cat==='consumable' ? '' : '1');
 
@@ -1973,3 +1973,108 @@ if(typeof equipInv === 'function' && typeof _equipInvWrapped === 'undefined'){
     _equipInvOld(uid);
   };
 }
+
+
+
+/* ===== V0.2.1 UPDATE: weapon hand selection + changelog UI + equipped highlight ===== */
+
+let _pendingWeaponUid = null;
+
+function openWeaponHandModal(uid){
+  _pendingWeaponUid = uid;
+  const it = S.inventory.find(x=>x.uid===uid);
+  const d = it ? getItemById(it.cat,it.id) : null;
+  const name = d ? d.name : '—';
+  const n = $('#whName'); if(n) n.textContent = name;
+  const dlg = $('#weaponHandModal'); if(dlg && !dlg.open) dlg.showModal();
+}
+
+function closeWeaponHandModal(){
+  const dlg = $('#weaponHandModal'); if(dlg && dlg.open) dlg.close();
+  _pendingWeaponUid = null;
+}
+
+// Override equipInv: for weapons, ask hand choice
+if(typeof equipInv === 'function' && typeof _equipInvV021Wrapped === 'undefined'){
+  var _equipInvV021Wrapped = true;
+  const _equipInvPrev = equipInv;
+  equipInv = function(uid){
+    const it = S.inventory.find(x=>x.uid===uid);
+    if(!it) return;
+    if(it.cat==='weapon'){
+      openWeaponHandModal(uid);
+      return;
+    }
+    _equipInvPrev(uid);
+  };
+}
+
+// Changelog data (top3 preview + modal)
+const CHANGELOG = [
+  {v:'0.2.1', items:[
+    '背包「已裝備」標籤高亮顯示',
+    '武器裝備時可選擇左手/右手',
+    '更新歷程：只顯示前三筆，+/- 開啟全部歷程視窗'
+  ]},
+  {v:'0.2.0', items:['修正同一把武器不可同時裝備左右手（同 uid 自動卸下/移動）']},
+  {v:'0.1.9', items:['修正背包裝備按鈕無效','戰鬥技能欄改為精簡按鈕列']},
+  {v:'0.1.8', items:['修正 drop_shop / drop_and_shop 鍵名衝突','商店/稀有度權重加入缺資料保護']},
+  {v:'0.1.7', items:['修正 drop_and_shop.json 載入鍵名']},
+  {v:'0.1.6', items:['修正末尾函式重複宣告導致 UI 無法操作']},
+  {v:'0.1.5', items:['熱修：補齊缺失函式（但避免重複宣告）']},
+  {v:'0.1.4', items:['戰鬥視窗 RPG 化','裝備隨機屬性、評分、商店購買後揭示']},
+  {v:'0.1.3', items:['戰鬥視窗 + 齒輪存檔整合（初版）']},
+];
+
+function renderChangelog(){
+  const pre = $('#clPreview');
+  if(pre){
+    const top = CHANGELOG.slice(0,3);
+    pre.innerHTML = top.map(e=>{
+      const li = e.items.map(x=>`<div class="muted">• ${escapeHtml(x)}</div>`).join('');
+      return `<div class="clItem"><div class="clVer">v${escapeHtml(e.v)}</div>${li}</div>`;
+    }).join('');
+  }
+  const all = $('#clAll');
+  if(all){
+    all.innerHTML = CHANGELOG.map(e=>{
+      const li = e.items.map(x=>`<div class="muted">• ${escapeHtml(x)}</div>`).join('');
+      return `<div class="clItem"><div class="clVer">v${escapeHtml(e.v)}</div>${li}</div>`;
+    }).join('');
+  }
+}
+
+function openChangelogModal(){
+  const dlg = $('#changelogModal');
+  if(dlg && !dlg.open) dlg.showModal();
+  const t = $('#clToggle'); if(t) t.textContent = '-';
+}
+
+function closeChangelogModal(){
+  const dlg = $('#changelogModal');
+  if(dlg && dlg.open) dlg.close();
+  const t = $('#clToggle'); if(t) t.textContent = '+';
+}
+
+// bind after DOM ready (extend existing listener safely)
+document.addEventListener('DOMContentLoaded', ()=>{
+  // weapon hand modal
+  const whC = $('#whClose'); if(whC) whC.onclick = closeWeaponHandModal;
+  const whR = $('#whRight'); if(whR) whR.onclick = ()=>{
+    if(_pendingWeaponUid) equip('weaponR', _pendingWeaponUid);
+    closeWeaponHandModal(); render();
+  };
+  const whL = $('#whLeft'); if(whL) whL.onclick = ()=>{
+    if(_pendingWeaponUid) equip('weaponL', _pendingWeaponUid);
+    closeWeaponHandModal(); render();
+  };
+
+  // changelog
+  renderChangelog();
+  const tg = $('#clToggle'); if(tg) tg.onclick = ()=>{
+    const dlg = $('#changelogModal');
+    if(dlg && dlg.open) closeChangelogModal();
+    else openChangelogModal();
+  };
+  const clC = $('#clClose'); if(clC) clC.onclick = closeChangelogModal;
+});

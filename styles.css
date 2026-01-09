@@ -302,3 +302,16 @@ h3{margin:0; font-size:14px}
 .bmSkills{display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start; max-height:140px; overflow:auto; padding-right:4px;}
 .btn-skill{padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); font-weight:800; font-size:12px;}
 .btn-skill:hover{background: rgba(255,255,255,.07);}
+
+/* V0.2.1 equipped badge highlight */
+.badge.equipped{border-color: rgba(140,255,190,.35); background: rgba(80,255,160,.12); color: rgba(220,255,240,1); font-weight:900;}
+/* mini modal */
+.miniModal{width:min(560px, 92vw);}
+.mmHeader{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
+.mmTitle{font-weight:900;}
+.mmBody{display:flex; flex-direction:column; gap:12px;}
+.mmBtns{display:flex; gap:10px; flex-wrap:wrap;}
+.clPreview{display:flex; flex-direction:column; gap:8px; margin-top:8px;}
+.clItem{border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03); border-radius:14px; padding:10px;}
+.clVer{font-weight:900; margin-bottom:4px;}
+.clList{display:flex; flex-direction:column; gap:8px; max-height:65vh; overflow:auto; padding-right:4px;}
