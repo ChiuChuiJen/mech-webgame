@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.1.8';
+const VERSION = '0.1.9';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -1437,7 +1437,7 @@ function renderInventory(){
         <div class="row">
           <div class="title">${escapeHtml(d.name)} ${rarityBadge(d.rarity)} ${it.cat!=='consumable' ? `<span class="badge">評分：${rating}</span>`:''} ${setBadge} ${eqBadge}</div>
           <div class="row" style="gap:8px;">
-            ${it.cat!=='consumable' ? `<button class="btn" onclick="equip('${it.uid}')">裝備</button>` : ''}
+            ${it.cat!=='consumable' ? `<button class="btn" onclick="equipInv('${it.uid}')">裝備</button>` : ''}
             <button class="btn" onclick="sell('${it.uid}')">出售</button>
           </div>
         </div>
@@ -1820,4 +1820,92 @@ function rerollShop(){
   }
   S.shop={items};
   render();
+}
+
+
+
+/* ===== V0.1.9 HOTFIX: inventory equip + compact skill UI ===== */
+
+// Inventory equip button in patched UI should call equipInv(uid) instead of equip(slot, uid)
+function equipInv(uid){
+  const it = S.inventory.find(x=>x.uid===uid);
+  if(!it) return;
+  const d = getItemById(it.cat, it.id);
+
+  // weapons: auto choose a hand (prefer empty)
+  if(it.cat==='weapon'){
+    const r = getEquipped('weaponR') ? null : 'weaponR';
+    const l = getEquipped('weaponL') ? null : 'weaponL';
+    const slot = r || l || 'weaponR';
+    equip(slot, uid);
+    render();
+    return;
+  }
+
+  // equipment: use its own slot
+  if(it.cat==='equipment'){
+    const slot = d.slot;
+    if(!slot){ log('此裝備缺少部位資訊，無法裝備。'); return; }
+    equip(slot, uid);
+    render();
+    return;
+  }
+
+  log('此物品無法裝備。');
+}
+
+// Make skill list compact (buttons list) to avoid taking too much space
+function renderBattleModal(){
+  const dlg = $('#battleModal'); if(!dlg) return;
+  const b=S.battle;
+  const st=stats();
+
+  const tEl=$('#bmTurn'); if(tEl) tEl.textContent = `回合 ${S.battleTurn||1}`;
+
+  // player
+  $('#bmPlayerHp').textContent = `${S.hp} / ${st.hpMax}`;
+  $('#bmPlayerMp').textContent = `${S.en} / ${st.enMax}`;
+  $('#bmPlayerAtk').textContent = st.atk;
+  $('#bmPlayerDef').textContent = st.def;
+  setBar('#bmPlayerHpBar', S.hp, st.hpMax);
+  setBar('#bmPlayerMpBar', S.en, st.enMax);
+
+  const ps=$('#bmPlayerStatus'); if(ps) ps.innerHTML = statusTagsHtml('player');
+  const es=$('#bmEnemyStatus'); if(es) es.innerHTML = statusTagsHtml('enemy');
+
+  if(!b.active){
+    $('#bmEnemyName').textContent='—';
+    $('#bmEnemyHp').textContent='—';
+    $('#bmEnemyAtk').textContent='—';
+    $('#bmEnemyDef').textContent='—';
+    setBar('#bmEnemyHpBar', 0, 1);
+    $('#bmHint').textContent = '未在戰鬥中。';
+  } else {
+    $('#bmEnemyName').textContent = `${b.enemy.name} · ${b.enemy.role}`;
+    $('#bmEnemyHp').textContent = `${b.enemyHp} / ${b.enemyHpMax}`;
+    $('#bmEnemyAtk').textContent = b.enemy.atk;
+    $('#bmEnemyDef').textContent = b.enemy.def;
+    setBar('#bmEnemyHpBar', b.enemyHp, b.enemyHpMax);
+    $('#bmHint').textContent = '可按「普攻」或點下方技能按鈕。';
+  }
+
+  // log
+  const box=$('#bmLogBox');
+  if(box){
+    const lines = S.battleLog.slice(0,80).reverse();
+    box.innerHTML = lines.length ? lines.map(s=>`<div class="line">${escapeHtml(s)}</div>`).join('') : `<div class="line muted">（尚無戰鬥紀錄）</div>`;
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // skills (compact)
+  const sk=$('#bmSkills');
+  if(sk){
+    sk.innerHTML = SKILLS.map(s=>{
+      const dis = (!b.active || S.en < s.cost) ? 'disabled' : '';
+      return `<button class="btn btn-skill" ${dis} title="${escapeHtml(s.desc)}" onclick="castSkill('${s.id}')">${escapeHtml(s.name)} <span class="muted">MP${s.cost}</span></button>`;
+    }).join('');
+  }
+
+  // auto toggle sync
+  const at=$('#bmAutoToggle'); if(at) at.checked = !!S.battleAuto;
 }

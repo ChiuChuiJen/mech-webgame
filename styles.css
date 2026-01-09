@@ -297,3 +297,8 @@ h3{margin:0; font-size:14px}
   .bmLoot{grid-template-columns:1fr;}
   .bmRewardsMeta{grid-template-columns:1fr;}
 }
+
+/* V0.1.9 compact skills */
+.bmSkills{display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start; max-height:140px; overflow:auto; padding-right:4px;}
+.btn-skill{padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); font-weight:800; font-size:12px;}
+.btn-skill:hover{background: rgba(255,255,255,.07);}
