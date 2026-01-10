@@ -1,7 +1,7 @@
 /* V0.1.1 - No frameworks, GitHub Pages friendly */
 'use strict';
 
-const VERSION = '0.2.6';
+const VERSION = '0.2.7';
 const SAVE_KEY = 'mech_webgame_save_v' + VERSION;
 
 // Helpers
@@ -2702,5 +2702,50 @@ if(typeof render === 'function' && typeof _renderV026Wrapped === 'undefined'){
       try{ renderSkillSlotsUI(); }catch(e){}
       try{ refreshSkillsIfVisible(); }catch(e){}
     }
+  };
+}
+
+
+
+/* ===== V0.2.7 HOTFIX: bind "Next Explore" mode toggle reliably ===== */
+
+function bindNextExploreControls(){
+  try{
+    const t = document.getElementById('bmNextToggle');
+    const m = document.getElementById('bmNextMode');
+    if(!t || !m) return;
+
+    // checkbox enable/disable
+    t.onchange = ()=>{
+      if(!S) return;
+      if(typeof S.autoNextExplore==='undefined') S.autoNextExplore=false;
+      S.autoNextExplore = !!t.checked;
+      setNextModeUI();
+    };
+
+    // badge toggles single/loop
+    m.onclick = ()=>{
+      if(!S) return;
+      if(!S.autoNextMode) S.autoNextMode='single';
+      S.autoNextMode = (S.autoNextMode==='loop') ? 'single' : 'loop';
+      setNextModeUI();
+    };
+    m.style.cursor = 'pointer';
+    m.title = '點擊切換：單次 / 循環';
+  }catch(e){}
+}
+
+// Ensure it runs after we inject fallback toggles
+document.addEventListener('DOMContentLoaded', ()=>{
+  setTimeout(()=>{ try{ bindNextExploreControls(); }catch(e){} }, 80);
+});
+
+// Also run after battle modal renders (so it still works if DOM is rebuilt)
+if(typeof renderBattleModal === 'function' && typeof _renderBattleModalV027Wrapped === 'undefined'){
+  var _renderBattleModalV027Wrapped = true;
+  const _renderBattleModalPrev = renderBattleModal;
+  renderBattleModal = function(){
+    _renderBattleModalPrev();
+    bindNextExploreControls();
   };
 }

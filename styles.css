@@ -338,3 +338,6 @@ dialog::backdrop{background: rgba(0,0,0,.55);}
 
 /* battle next mode badge */
 #bmNextMode{min-width:44px; text-align:center;}
+
+/* V0.2.7 */
+#bmNextMode{cursor:pointer;}
